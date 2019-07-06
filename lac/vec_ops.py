@@ -1,6 +1,6 @@
 import math
 
-from lac.vectors import Vector
+from objs import Vector
 
 def scale(v, alpha):
     """Scales a vectore by alpha.
