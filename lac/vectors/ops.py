@@ -39,7 +39,7 @@ def add(v1, v2):
     if v1.ndim != v2.ndim:
         msg = "Vectors must have the same dimension, got {} and {}"
         raise ValueError(msg.format(v1.ndim, v2.ndim))
-        
+
     return Vector(c1 + c2 for c1, c2 in zip(v1, v2))
 
 def subtraction(v1, v2):
@@ -67,6 +67,10 @@ def dot(v1, v2):
         float, int: the sum of the multiplication of each of the components
             of the two provided vectors.
     """
+    if v1.ndim != v2.ndim:
+        msg = "Vectors must have the same dimension, got {} and {}"
+        raise ValueError(msg.format(v1.ndim, v2.ndim))
+        
     return sum(c1*c2 for c1,c2 in zip(v1, v2))
 
 def cross(v1, v2):
@@ -117,3 +121,16 @@ def build_unit_vector(v):
         equal to 1.
     """
     return v / norm(v)
+
+def projection(v, d):
+    """Projects a vector v into the vector d.
+
+    Arguments:
+        v (Vector): the vector you wish to project.
+        d (Vector): the fector you wish to project onto.
+
+    Returns:
+        Vector: the projection of v onto d.
+    """
+    d = build_unit_vector(d)
+    return dot(v, d)
