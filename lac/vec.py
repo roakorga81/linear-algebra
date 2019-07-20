@@ -6,6 +6,9 @@ This module implements logic for Vector objects and vector operations.
 
 import math
 
+###################################################################
+########################## Vector class ###########################
+###################################################################
 class Vector:
     def __init__(self, components):
         self._components = tuple(components)
@@ -51,8 +54,9 @@ class Vector:
     def __repr__(self):
         comp_repr = (('{},'*(self.ndim))[:-1]).format(*self.components)
         return "Vector([" + comp_repr + "])"
-
-
+###################################################################
+########################## Operations #############################
+###################################################################
 def scale(v, alpha):
     """Scales a vectore by alpha.
 
@@ -100,7 +104,7 @@ def subtraction(v1, v2):
         v1 (Vector): First vector in the subtraction operation.
         v2 (Vector): Second vector in the subtraction operation.
 
-    Returns
+    Returns:
         Vector: A vector whose components are the difference of the components
             of the two provided vectors.
 
