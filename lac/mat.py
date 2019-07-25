@@ -19,9 +19,12 @@ class Matrix:
         if cond1 or cond2:
             msg = "You should pass either column vectors only or row vectors only"
             raise TypeError(msg)
-            
-        self._columvectors = tuple(columns)
-        self._rowvectors = tuple(rows)
+        if columns is not None:
+            self._columvectors = tuple(columns)
+            self._rowvectors = None
+        if rows is not None:
+            self._rowvectors = tuple(rows)
+            self._columvectors = None
 
     @property
     def columnvectors(self):
@@ -57,6 +60,23 @@ class Matrix:
     def shape(self):
         return (self.num_rows, self.num_columns)
 
+    def iterrows(self):
+        for row in self.rowvectors:
+            yield row
+
+    def itercolumns(self):
+        for col in self.columnvectors:
+            yield col
+
+    def __iter__(self):
+        return self.iterrows()
+
+    def __len__(self):
+        return self.num_rows
+
+    def __repr__(self):
+        return f"Matrix(shape={self.shape})"
+
 
 ###################################################################
 ########################### Operations ############################
@@ -78,7 +98,7 @@ def scale(m, alpha):
 def add(m1, m2):
     """Adds two matrices.
 
-    Arguments:
+    Args:
         m1, m2 (Matrix): The matrices to be added.
 
     Returns:
@@ -90,10 +110,37 @@ def add(m1, m2):
         (v1 + v2 for v1, v2 in zip(m1.rowvectors, m2.rowvectors)))
 
 def subtract(m1, m2):
-    raise NotImplementedError
+    """Substracts the second matrix from the first one.
 
-def vector_multiply(m, v):
-    raise NotImplementedError
+    Args:
+        m1, m2 (Matrix): Matrices to perform m1 - m2.
+
+    Returns:
+        A Matrix whose elements are the numbers shuch that m2 + out = m1.
+    """
+    return add(m1, scale(m2, -1))
+
+def vector_multiply(m, v, from_left=False):
+    """Multiplies a matrix with a vector from the right or the left.
+
+    Args:
+        m (Matrix): The matrix
+        v (Vector): The vector
+        from_left (bool): Whether the vector multiplies from the left. Defaults
+            to `False`.
+    
+    Returns:
+        A Matrix whose shape is determined by the same of `v` and the
+        `from_left` parameter.
+    """
+    # cond1 = m.num_rows != v.ndim and from_left
+    # cond2 = m.num_columns != v.ndim and not from_left
+    # if cond1 or con2:
+    #     raise ValueError(f"Shape mismatch: m({m.shape}), v({v.ndim})")
+
+    # if from_left:
+        
+    return Fal
 
 def matrix_multiply(m1, m2):
     raise NotImplementedError
