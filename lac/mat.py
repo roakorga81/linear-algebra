@@ -4,6 +4,11 @@ from lac import vec
 ########################## Matrix class ###########################
 ###################################################################
 
+def _validate_vector_dimensions(vectors):
+    ref = vectors[0].ndim
+    if not all(v.ndim == ref for v in vectors):
+        raise ValueError("Vectors do not have the same number of dimensions")
+
 class Matrix:
     @classmethod
     def from_columnvectors(cls, vectors):
@@ -21,16 +26,18 @@ class Matrix:
             raise TypeError(msg)
         if columns is not None:
             self._columvectors = tuple(columns)
+            _validate_vector_dimensions(self._columvectors)
             self._rowvectors = None
         if rows is not None:
             self._rowvectors = tuple(rows)
+            _validate_vector_dimensions(self._rowvectors)
             self._columvectors = None
 
     @property
     def columnvectors(self):
         if self._columvectors is None:
             self._columvectors = tuple(
-                v[i] for v in self.rowvectors
+                vec.Vector(v[i] for v in self.rowvectors)
                 for i in range(self.num_columns)
             )
         return self._columvectors
@@ -39,7 +46,7 @@ class Matrix:
     def rowvectors(self):
         if self._rowvectors is None:
             self._rowvectors = tuple(
-                v[i] for v in self.columnvectors
+                vec.Vector(v[i] for v in self.columnvectors)
                 for i in range(self.num_rows)
             )
         return self._rowvectors
@@ -133,26 +140,28 @@ def vector_multiply(m, v, from_left=False):
         A Matrix whose shape is determined by the same of `v` and the
         `from_left` parameter.
     """
-    # cond1 = m.num_rows != v.ndim and from_left
-    # cond2 = m.num_columns != v.ndim and not from_left
-    # if cond1 or con2:
-    #     raise ValueError(f"Shape mismatch: m({m.shape}), v({v.ndim})")
+    cond1 = m.num_rows != v.ndim and from_left
+    cond2 = m.num_columns != v.ndim and not from_left
+    if cond1 or cond2:
+        raise ValueError(f"Shape mismatch: m({m.shape}), v({v.ndim})")
 
-    # if from_left:
-        
-    return Fal
+    if from_left:
+        out = vec.Vector(vec.dot(v, vi) for vi in m.columnvectors)
+    else:
+        out = vec.Vector(vec.dot(v, vi) for vi in m.rowvectors)
+    return out
 
-def matrix_multiply(m1, m2):
-    raise NotImplementedError
+# def matrix_multiply(m1, m2):
+#     raise NotImplementedError
 
-def transpose(m):
-    raise NotImplementedError
+# def transpose(m):
+#     raise NotImplementedError
 
-def inverse(m):
-    raise NotImplementedError
+# def inverse(m):
+#     raise NotImplementedError
 
-def determinan(m):
-    raise NotImplementedError
+# def determinan(m):
+#     raise NotImplementedError
 
-def trace(m):
-    raise NotImplementedError
+# def trace(m):
+#     raise NotImplementedError
