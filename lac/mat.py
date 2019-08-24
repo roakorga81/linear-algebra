@@ -82,7 +82,8 @@ class Matrix:
         return self.num_rows
 
     def __repr__(self):
-        return f"Matrix(shape={self.shape})"
+        vals = "    ".join(f"{row.components}\n" for row in self.iterrows())
+        return f"Matrix(\n  values=\n    [{vals[:-1]}],\n  shape={self.shape})"
 
 
 ###################################################################
@@ -137,7 +138,7 @@ def vector_multiply(m, v, from_left=False):
             to `False`.
     
     Returns:
-        A Matrix whose shape is determined by the same of `v` and the
+        A Vector whose shape is determined by the same of `v` and the
         `from_left` parameter.
     """
     cond1 = m.num_rows != v.ndim and from_left
@@ -151,17 +152,54 @@ def vector_multiply(m, v, from_left=False):
         out = vec.Vector(vec.dot(v, vi) for vi in m.rowvectors)
     return out
 
-# def matrix_multiply(m1, m2):
-#     raise NotImplementedError
+def matrix_multiply(m1, m2):
+    """Multiplies two matrices together.
 
-# def transpose(m):
-#     raise NotImplementedError
+    Args:
+        m1 (Matrix): Matrx of shape (m,n)
+        m2 (Matrix): Matrix of shape (n, k)
+
+    Returns:
+        (Matrix): The product of m1 and m2, has shape (m, k)
+
+    Raises:
+        ValueError: if the number of columns in m1 does not match the number of
+            rows in m2
+    """
+    if m1.num_columns != m2.num_rows:
+        msg = "number of columns in m1 must match number of rows in m2, got {} and {} instead"
+        raise ValueError(msg.format(m1.num_columns, m2.num_rows))
+
+    out = Matrix.from_rowvectors(vector_multiply(m2, row, from_left=True)
+        for row in m1.iterrows())
+    return out
+
+def transpose(m):
+    """Computes the transpose of a matrix.
+
+    Args:
+        m (Matrix): a matrix of shape (m,n)
+    
+    Returns:
+        (Matrix): a matrix of shape (n,m) where the rows are the columns of the
+            given matrix.
+    """
+    return Matrix.from_rowvectors(m.itercolumns())
+
+def trace(m):
+    """Computes the sum of the diagnal entries of a matrix.
+
+    Args:
+        m (Matrix)
+
+    Returns:
+        (int or float) the sum of the diagonal entries of m.
+
+    """
+    return sum(row[i] for i, row in enumerate(m.iterrows()))
 
 # def inverse(m):
 #     raise NotImplementedError
 
 # def determinan(m):
-#     raise NotImplementedError
-
-# def trace(m):
 #     raise NotImplementedError
