@@ -130,5 +130,40 @@ class TestVectorOps(unittest.TestCase):
         v2 = Vector([1, 0, 0])
         self.assertAlmostEqual(vector_ops.dot(v1, v2), 0, PRECISION)
 
-    def test_cross(self):
+    def test_angle_between_parallel(self):
+        v1 = Vector([1, 0, 0])
+        v2 = Vector([1, 0, 0])
+        self.assertAlmostEqual(vector_ops.angle_between(v1, v2), 0, PRECISION)
+
+    def test_angle_between_antiparallel(self):
+        v1 = Vector([-1, 0, 0])
+        v2 = Vector([1, 0, 0])
+        self.assertAlmostEqual(vector_ops.angle_between(v1, v2), math.pi, PRECISION)
+
+    def test_angle_between_orthogonal(self):
+        v1 = Vector([0, 1, 0])
+        v2 = Vector([1, 0, 0])
+        self.assertAlmostEqual(vector_ops.angle_between(v1, v2), math.pi/2, PRECISION)
+
+    def test_dot_angle_equality(self):
+        for v1, v2 in itertools.product(ALL_VECTORS, ALL_VECTORS):
+            if v1.norm > 0 and v2.nrom > 0:
+                f1 = vector_ops.dot(v1, v2)
+                f2 = v1.norm * v2.norm * math.cos(vector_ops.angle_between(v1, v2))
+                self.assertAlmostEqual(f1, f2, PRECISION)
+
+    def test_cross_parallel(self):
+        v1 = Vector([1, 0, 0])
+        v2 = Vector([1, 0, 0])
+
+
+    def test_cross_antiparallel(self):
+        v1 = Vector([-1, 0, 0])
+        v2 = Vector([1, 0, 0])
+
+    def test_cross_orthogonal(self):
+        v1 = Vector([0, 1, 0])
+        v2 = Vector([1, 0, 0])
+
+    def test_cross_angle_equality(self):
         pass

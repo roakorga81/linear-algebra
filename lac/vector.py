@@ -128,7 +128,12 @@ def dot(v1: Vector, v2: Vector) -> Number:
         msg = "vectors must have the same dimension, got {} and {}"
         raise ValueError(msg.format(v1.dim, v2.dim))
 
-    return sum(c1 * c2 for c1, c2 in zip(v1, v2))
+    return math.fsum(c1 * c2 for c1, c2 in zip(v1, v2))
+
+
+def angle_between(v1: Vector, v2: Vector) -> Number:
+    """Computes the angle between two vectors. """
+    return math.acos(dot(v1, v2)/(v1.norm * v2.norm))
 
 
 def cross(v1: Vector, v2: Vector) -> Vector:
