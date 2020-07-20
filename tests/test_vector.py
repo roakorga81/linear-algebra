@@ -132,38 +132,92 @@ class TestVectorOps(unittest.TestCase):
 
     def test_angle_between_parallel(self):
         v1 = Vector([1, 0, 0])
-        v2 = Vector([1, 0, 0])
+        v2 = Vector([2, 0, 0])
         self.assertAlmostEqual(vector_ops.angle_between(v1, v2), 0, PRECISION)
 
     def test_angle_between_antiparallel(self):
         v1 = Vector([-1, 0, 0])
-        v2 = Vector([1, 0, 0])
+        v2 = Vector([2, 0, 0])
         self.assertAlmostEqual(vector_ops.angle_between(v1, v2), math.pi, PRECISION)
 
     def test_angle_between_orthogonal(self):
         v1 = Vector([0, 1, 0])
         v2 = Vector([1, 0, 0])
-        self.assertAlmostEqual(vector_ops.angle_between(v1, v2), math.pi/2, PRECISION)
+        self.assertAlmostEqual(vector_ops.angle_between(v1, v2), math.pi / 2, PRECISION)
 
     def test_dot_angle_equality(self):
         for v1, v2 in itertools.product(ALL_VECTORS, ALL_VECTORS):
-            if v1.norm > 0 and v2.nrom > 0:
+            if v1.norm > 0 and v2.norm > 0:
                 f1 = vector_ops.dot(v1, v2)
                 f2 = v1.norm * v2.norm * math.cos(vector_ops.angle_between(v1, v2))
                 self.assertAlmostEqual(f1, f2, PRECISION)
 
     def test_cross_parallel(self):
         v1 = Vector([1, 0, 0])
-        v2 = Vector([1, 0, 0])
-
-
-    def test_cross_antiparallel(self):
-        v1 = Vector([-1, 0, 0])
-        v2 = Vector([1, 0, 0])
+        v2 = Vector([2, 0, 0])
+        assert_vectors_almost_equal(vector_ops.cross(v1, v2), Vector.make_zero(3))
 
     def test_cross_orthogonal(self):
         v1 = Vector([0, 1, 0])
         v2 = Vector([1, 0, 0])
+        assert_vectors_almost_equal(vector_ops.cross(v1, v2), Vector([0, 0, -1]))
 
     def test_cross_angle_equality(self):
-        pass
+        for v1, v2 in itertools.product(ALL_VECTORS, ALL_VECTORS):
+            if v1.norm > 0 and v2.norm > 0:
+                theta = vector_ops.angle_between(v1, v2)
+                f1 = vector_ops.cross(v1, v2).norm
+                f2 = v1.norm * v2.norm * abs(math.sin(theta))
+                self.assertAlmostEqual(f1, f2, PRECISION)
+
+    def test_cross_self(self):
+        for v1, v2 in itertools.product(ALL_VECTORS, ALL_VECTORS):
+            if v1 == v2:
+                vec = vector_ops.cross(v1, v2)
+                assert_vectors_almost_equal(vec, Vector.make_zero(3))
+
+    def test_cross_anticommutative(self):
+        for v1, v2 in itertools.product(ALL_VECTORS, ALL_VECTORS):
+            vec1 = vector_ops.cross(v1, v2)
+            vec2 = vector_ops.cross(v2, v1)
+            assert_vectors_almost_equal(vec1, -vec2)
+
+    def test_cross_distributive(self):
+        for v1, v2 in itertools.product(ALL_VECTORS, ALL_VECTORS):
+            for v3 in ALL_VECTORS:
+                vec1 = vector_ops.cross(v1, v2 + v3)
+                vec2 = vector_ops.cross(v1, v2) + vector_ops.cross(v1, v3)
+                assert_vectors_almost_equal(vec1, vec2)
+
+    def test_cross_scalar_multiply(self):
+        for v1, v2 in itertools.product(ALL_VECTORS, ALL_VECTORS):
+            for k in ALL_SCALARS:
+                vec1 = vector_ops.cross(k * v1, v2)
+                vec2 = vector_ops.cross(v1, k * v2)
+                vec3 = k * vector_ops.cross(v1, v2)
+                for a, b in itertools.combinations([vec1, vec2, vec3], 2):
+                    assert_vectors_almost_equal(a, b)
+
+    def test_cross_jacobi_identity(self):
+        for v1, v2 in itertools.product(ALL_VECTORS, ALL_VECTORS):
+            for v3 in ALL_VECTORS:
+                vec1 = vector_ops.cross(v1, vector_ops.cross(v2, v3))
+                vec2 = vector_ops.cross(v2, vector_ops.cross(v3, v1))
+                vec3 = vector_ops.cross(v3, vector_ops.cross(v1, v2))
+                assert_vectors_almost_equal(vec1 + vec2 + vec3, Vector.make_zero(3))
+
+    def test_cross_parallelepiped_volume(self):
+        for v1, v2 in itertools.product(ALL_VECTORS, ALL_VECTORS):
+            for v3 in ALL_VECTORS:
+                f1 = v1 @ vector_ops.cross(v2, v3)
+                f2 = v2 @ vector_ops.cross(v3, v1)
+                f3 = v3 @ vector_ops.cross(v1, v2)
+                for a, b in itertools.combinations([f1, f2, f3], 2):
+                    self.assertAlmostEqual(a, b, PRECISION)
+
+    def test_cross_dot_relationship(self):
+        for v1, v2 in itertools.product(ALL_VECTORS, ALL_VECTORS):
+            for v3 in ALL_VECTORS:
+                vec1 = vector_ops.cross(v1, vector_ops.cross(v2, v3))
+                vec2 = ((v1 @ v3) * v2) - ((v1 @ v2) * v3)
+                assert_vectors_almost_equal(vec1, vec2)

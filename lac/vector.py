@@ -133,7 +133,9 @@ def dot(v1: Vector, v2: Vector) -> Number:
 
 def angle_between(v1: Vector, v2: Vector) -> Number:
     """Computes the angle between two vectors. """
-    return math.acos(dot(v1, v2)/(v1.norm * v2.norm))
+    frac = dot(v1, v2) / (v1.norm * v2.norm)
+    frac = max(min(frac, 1), -1)
+    return math.acos(frac)
 
 
 def cross(v1: Vector, v2: Vector) -> Vector:
@@ -143,14 +145,14 @@ def cross(v1: Vector, v2: Vector) -> Vector:
         ValueError: if any of the vectors in not 3 dimentional.
     """
     for v in [v1, v2]:
-        if v.ndim != 3:
+        if v.dim != 3:
             msg = "Expected 3-dimentional vector, got a {}-dimentional"
             raise ValueError(msg.format(v.ndim))
 
     c1 = v1[1] * v2[2] - v1[2] * v2[1]
-    c2 = v1[2] * v2[0] - v1[2] * v2[0]
+    c2 = v1[0] * v2[2] - v1[2] * v2[0]
     c3 = v1[0] * v2[1] - v1[1] * v2[0]
-    return Vector((c1, c2, c3))
+    return Vector((c1, -c2, c3))
 
 
 def build_unit_vector(v: Vector) -> Vector:
