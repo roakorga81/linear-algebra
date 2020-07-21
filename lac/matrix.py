@@ -2,7 +2,7 @@ import typing as t
 from numbers import Number
 
 import lac.vector as vector_ops
-from lac import Vector
+from lac import Vector, PRECISION
 
 
 def _validate_vector_dimensions(vectors: t.Sequence[Vector]) -> None:
@@ -90,6 +90,10 @@ class Matrix:
     def shape(self) -> t.Tuple[int, int]:
         return (self.num_rows, self.num_columns)
 
+    @property
+    def T(self):
+        return transpose(self)
+
     def iterrows(self):
         for row in self.rowvectors:
             yield row
@@ -97,6 +101,9 @@ class Matrix:
     def itercolumns(self):
         for col in self.columnvectors:
             yield col
+
+    def __eq__(self, other):
+        return almost_equal(self, other)
 
     def __matmul__(self, other):
         return matrix_multiply(self, other)
@@ -202,3 +209,10 @@ def invert(m: Matrix) -> Matrix:
 
 def determinant(m: Matrix) -> Matrix:
     raise NotImplementedError
+
+
+def almost_equal(m1: Matrix, m2: Matrix, ndigits: int = PRECISION) -> Matrix:
+    return all(
+        vector_ops.almost_equal(v1, v2, ndigits=ndigits) for v1, v2 in zip(m1, m2)
+    )
+

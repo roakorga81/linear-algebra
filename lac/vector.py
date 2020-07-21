@@ -173,7 +173,7 @@ def project(v: Vector, d: Vector) -> Vector:
     return dot(v, d.buil_unitary())
 
 
-def almost_equal(v1: Vector, v2: Vector, ndigits=PRECISION):
+def almost_equal(v1: Vector, v2: Vector, ndigits: int = PRECISION) -> bool:
     return (
         all(round(c1, ndigits) == round(c2, ndigits) for c1, c2 in zip(v1, v2))
         and v1.dim == v2.dim
