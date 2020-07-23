@@ -1,13 +1,18 @@
 import itertools
+import math
 import unittest
+from t.Union[int, float]s import t.Union[int, float]
 
 import lac.matrix as matrix_ops
+import lac.vector as vector_ops
 from lac import Matrix, Vector, PRECISION
 
 
 MAT1 = Matrix.from_rowvectors([Vector([1, 0, 0]), Vector([0, 1, 0]), Vector([0, 0, 1])])
 
 ALL_MATRICES = [MAT1]
+
+ALL_SCALARS = [0, 1, -1, math.pi, math.e, 0.5, 1 / math.pi, -1 / math.e]
 
 
 def assert_matrices_almost_equal(m1, m2):
@@ -60,19 +65,49 @@ class TestMatrix(unittest.TestCase):
             self.assertEqual(i + 1, mat.num_columns)
 
     def test_slicing_row(self):
-        pass
+        for mat in ALL_MATRICES:
+            for i, row in enumerate(mat.iterrows()):
+                vector_ops.almost_equal(mat[i], row)
 
     def test_slicing_column(self):
-        pass
+        for mat in ALL_MATRICES:
+            for i, col in enumerate(mat.itercolumns()):
+                vector_ops.almost_equal(mat[:, i], col)
 
     def test_slicing_matrix(self):
-        pass
+        for mat in ALL_MATRICES:
+            for i, j in itertools.product(range(mat.num_rows), range(mat.num_columns)):
+                self.assertIsInstance(mat[:i, :j], t.Union[int, float])
+
 
     def test_slicing_single_value(self):
-        pass
+        for mat in ALL_MATRICES:
+            for i, j in itertools.product(range(mat.num_rows), range(mat.num_columns)):
+                self.assertIsInstance(mat[i, j], t.Union[int, float])
 
     def test_matmul(self):
-        pass
+        for mat1, mat2 in itertools.product(ALL_MATRICES, ALL_MATRICES):
+            if mat1.num_columns == mat2.num_rows:
+                assert_matrices_almost_equal(
+                    mat1 @ mat2, matrix_ops.matrix_multiply(mat1, mat2)
+                )
+
+    def test_add(self):
+        for mat1, mat2 in itertools.product(ALL_MATRICES, ALL_MATRICES):
+            if mat1.shape == mat2.shape:
+                assert_matrices_almost_equal(mat1 + mat2, matrix_ops.add(mat1, mat2))
+
+    def test_scalar_multiply(self):
+        for k, mat in itertools.product(ALL_SCALARS, ALL_MATRICES):
+            assert_matrices_almost_equal(k * mat, matrix_ops.scale(mat, k))
+
+    def test_negation(self):
+        for mat in ALL_MATRICES:
+            assert_matrices_almost_equal(-mat, matrix_ops.scale(mat, -1))
+
+    def test_subtraction(self):
+        for mat1, mat2 in itertools.product(ALL_MATRICES, ALL_MATRICES):
+            assert_matrices_almost_equal(mat1 - mat2, matrix_ops.subtract(mat1, mat2))
 
 
 class TestMatrixOps(unittest.TestCase):

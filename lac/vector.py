@@ -1,14 +1,8 @@
-"""Vector related implementations.
-
-This module implements logic for Vector objects and vector operations.
-
-"""
 import math
 import random
 import reprlib
 import typing as t
 from array import array
-from numbers import Number
 
 from lac import PRECISION
 
@@ -27,16 +21,16 @@ class Vector:
         return cls([0] * dim)
 
     @classmethod
-    def make_unitary(cls, components: t.Sequence[Number]):
+    def make_unitary(cls, components: t.Sequence[t.Union[int, float]]):
         """Make a unitary vetor out of the components. """
         return build_unit_vector(cls(components))
 
-    def __init__(self, components: t.Sequence[Number]):
+    def __init__(self, components: t.Sequence[t.Union[int, float]]):
         self._components = array(self.typecode, components)
-        self._norm = None
+        self._norm: t.Optional[t.Union[int, float]] = None
 
     @property
-    def norm(self) -> Number:
+    def norm(self) -> t.Union[int, float]:
         if self._norm is None:
             self._norm = math.sqrt(dot(self, self))
         return self._norm
@@ -65,10 +59,10 @@ class Vector:
         return scale(self, k)
 
     def __neg__(self):
-        return -1 * self
+        return scale(self, -1)
 
     def __sub__(self, other):
-        return self + -other
+        return subtract(self, other)
 
     def __abs__(self):
         return self.norm
@@ -86,17 +80,17 @@ class Vector:
         return f"Vector({components})"
 
 
-def scale(v: Vector, k: Number) -> Vector:
+def scale(v: Vector, k: t.Union[int, float]) -> Vector:
     """Scales a vector by k.
 
     Raises:
-        TypeError: if k is not a number.
+        TypeError: if k is not a t.Union[int, float].
     """
-    if not isinstance(k, Number):
+    if not isinstance(k, (int, float)):
         msg = "Vectors can only be scaled by scalars! got {}"
         raise TypeError(msg.format(type(k)))
 
-    return Vector(k * c for c in v)
+    return Vector([k * c for c in v])
 
 
 def add(v1: Vector, v2: Vector) -> Vector:
@@ -109,7 +103,7 @@ def add(v1: Vector, v2: Vector) -> Vector:
         msg = "Vectors must have the same dimension, got {} and {}"
         raise ValueError(msg.format(v1.dim, v2.dim))
 
-    return Vector(c1 + c2 for c1, c2 in zip(v1, v2))
+    return Vector([c1 + c2 for c1, c2 in zip(v1, v2)])
 
 
 def subtract(v1: Vector, v2: Vector) -> Vector:
@@ -117,7 +111,7 @@ def subtract(v1: Vector, v2: Vector) -> Vector:
     return add(v1, scale(v2, -1))
 
 
-def dot(v1: Vector, v2: Vector) -> Number:
+def dot(v1: Vector, v2: Vector) -> t.Union[int, float]:
     """Computes the dot product of two vectors.
 
     Raises:
@@ -131,7 +125,7 @@ def dot(v1: Vector, v2: Vector) -> Number:
     return math.fsum(c1 * c2 for c1, c2 in zip(v1, v2))
 
 
-def angle_between(v1: Vector, v2: Vector) -> Number:
+def angle_between(v1: Vector, v2: Vector) -> t.Union[int, float]:
     """Computes the angle between two vectors. """
     frac = dot(v1, v2) / (v1.norm * v2.norm)
     frac = max(min(frac, 1), -1)
@@ -147,7 +141,7 @@ def cross(v1: Vector, v2: Vector) -> Vector:
     for v in [v1, v2]:
         if v.dim != 3:
             msg = "Expected 3-dimentional vector, got a {}-dimentional"
-            raise ValueError(msg.format(v.ndim))
+            raise ValueError(msg.format(v.dim))
 
     c1 = v1[1] * v2[2] - v1[2] * v2[1]
     c2 = v1[0] * v2[2] - v1[2] * v2[0]
@@ -160,7 +154,7 @@ def build_unit_vector(v: Vector) -> Vector:
     return scale(v, (1 / v.norm))
 
 
-def project(v: Vector, d: Vector) -> Vector:
+def project(v: Vector, d: Vector) -> t.Union[int, float]:
     """Projects a vector v into the vector d.
 
     Arguments:
@@ -170,7 +164,7 @@ def project(v: Vector, d: Vector) -> Vector:
     Returns:
         Vector: the projection of v onto d.
     """
-    return dot(v, d.buil_unitary())
+    return dot(v, build_unit_vector(d))
 
 
 def almost_equal(v1: Vector, v2: Vector, ndigits: int = PRECISION) -> bool:

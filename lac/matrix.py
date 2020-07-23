@@ -1,5 +1,4 @@
 import typing as t
-from numbers import Number
 
 import lac.vector as vector_ops
 from lac import Vector, PRECISION
@@ -8,7 +7,9 @@ from lac import Vector, PRECISION
 def _validate_vector_dimensions(vectors: t.Sequence[Vector]) -> None:
     ref = vectors[0].dim
     if not all(v.dim == ref for v in vectors):
-        raise ValueError("vectors do not have the same number of dimensions")
+        raise ValueError(
+            "vectors do not have the same t.Union[int, float] of dimensions"
+        )
 
 
 class Matrix:
@@ -24,7 +25,7 @@ class Matrix:
     def make_random(cls, num_rows: int, num_columns: int):
         """A Matrix built out of random unit row vectors. """
         return cls.from_rowvectors(
-            Vector.make_random(num_columns) for _ in range(num_rows)
+            [Vector.make_random(num_columns) for _ in range(num_rows)]
         )
 
     @classmethod
@@ -40,7 +41,7 @@ class Matrix:
     @classmethod
     def make_zero(cls, num_rows: int, num_columns: int):
         return cls.from_rowvectors(
-            Vector.make_zero(num_columns) for _ in range(num_rows)
+            [Vector.make_zero(num_columns) for _ in range(num_rows)]
         )
 
     def __init__(self, columns=None, rows=None):
@@ -62,7 +63,7 @@ class Matrix:
     def columnvectors(self) -> t.Tuple[Vector, ...]:
         if self._columvectors is None:
             self._columvectors = tuple(
-                Vector(v[i] for v in self.rowvectors) for i in range(self.num_columns)
+                Vector([v[i] for v in self.rowvectors for i in range(self.num_columns)])
             )
         return self._columvectors
 
@@ -70,7 +71,7 @@ class Matrix:
     def rowvectors(self) -> t.Tuple[Vector, ...]:
         if self._rowvectors is None:
             self._rowvectors = tuple(
-                Vector(v[i] for v in self.columnvectors) for i in range(self.num_rows)
+                Vector([v[i] for v in self.columnvectors for i in range(self.num_rows)])
             )
         return self._rowvectors
 
@@ -108,6 +109,21 @@ class Matrix:
     def __matmul__(self, other):
         return matrix_multiply(self, other)
 
+    def __add__(self, other):
+        return add(self, other)
+
+    def __rmul__(self, k):
+        return scale(self, k)
+
+    def __neg__(self):
+        return scale(self, -1)
+
+    def __sub__(self, other):
+        return subtract(self, other)
+
+    def __abs__(self):
+        return self.norm
+
     def __iter__(self):
         return self.iterrows()
 
@@ -126,7 +142,9 @@ class Matrix:
             elif isinstance(row, int) and isinstance(col, slice):
                 return Vector(self.rowvectors[row][col])
             else:
-                raise NotImplementedError
+                print(row, col, f"#{slice_}")
+                rowvectors = None
+                return type(self).from_rowvectors(rowvectors)
         else:
             raise NotImplementedError
 
@@ -136,15 +154,15 @@ class Matrix:
         return f"Matrix(\n  {vals[:-1]}],\n shape={self.shape}\n)"
 
 
-def scale(m: Matrix, k: Number) -> Matrix:
+def scale(m: Matrix, k: t.Union[int, float]) -> Matrix:
     """Scale matrix m by k. """
-    return Matrix.from_rowvectors((k * v for v in m.rowvectors))
+    return Matrix.from_rowvectors([k * v for v in m.rowvectors])
 
 
 def add(m1: Matrix, m2: Matrix) -> Matrix:
     """Adds two matrices. """
     return Matrix.from_rowvectors(
-        (v1 + v2 for v1, v2 in zip(m1.rowvectors, m2.rowvectors))
+        [v1 + v2 for v1, v2 in zip(m1.rowvectors, m2.rowvectors)]
     )
 
 
@@ -161,9 +179,9 @@ def vector_multiply(m: Matrix, v: Vector, from_left: bool = False) -> Vector:
         raise ValueError(f"Shape mismatch: m({m.shape}), v({v.dim})")
 
     if from_left:
-        out = Vector(vector_ops.dot(v, vi) for vi in m.columnvectors)
+        out = Vector([vector_ops.dot(v, vi) for vi in m.columnvectors])
     else:
-        out = Vector(vector_ops.dot(v, vi) for vi in m.rowvectors)
+        out = Vector([vector_ops.dot(v, vi) for vi in m.rowvectors])
     return out
 
 
@@ -178,18 +196,18 @@ def matrix_multiply(m1: Matrix, m2: Matrix) -> Matrix:
         (Matrix): The product of m1 and m2, has shape (m, k)
 
     Raises:
-        ValueError: if the number of columns in m1 does not match the number of
+        ValueError: if the t.Union[int, float] of columns in m1 does not match the t.Union[int, float] of
             rows in m2
     """
     if m1.num_columns != m2.num_rows:
         msg = (
-            "number of columns in m1 must match number of rows in m2, got {} and {} "
+            "t.Union[int, float] of columns in m1 must match t.Union[int, float] of rows in m2, got {} and {} "
             "instead"
         )
         raise ValueError(msg.format(m1.num_columns, m2.num_rows))
 
     out = Matrix.from_rowvectors(
-        vector_multiply(m2, row, from_left=True) for row in m1.iterrows()
+        [vector_multiply(m2, row, from_left=True) for row in m1.iterrows()]
     )
     return out
 
@@ -198,7 +216,7 @@ def transpose(m: Matrix) -> Matrix:
     return Matrix.from_rowvectors(m.itercolumns())
 
 
-def trace(m: Matrix) -> Number:
+def trace(m: Matrix) -> t.Union[int, float]:
     """Computes the sum of the diagnal entries of a matrix. """
     return sum(row[i] for i, row in enumerate(m.iterrows()) if i < m.num_columns)
 
@@ -211,7 +229,7 @@ def determinant(m: Matrix) -> Matrix:
     raise NotImplementedError
 
 
-def almost_equal(m1: Matrix, m2: Matrix, ndigits: int = PRECISION) -> Matrix:
+def almost_equal(m1: Matrix, m2: Matrix, ndigits: int = PRECISION) -> bool:
     return all(
         vector_ops.almost_equal(v1, v2, ndigits=ndigits) for v1, v2 in zip(m1, m2)
     )
