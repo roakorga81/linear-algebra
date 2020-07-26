@@ -1,7 +1,6 @@
 import itertools
 import math
 import unittest
-from t.Union[int, float]s import t.Union[int, float]
 
 import lac.matrix as matrix_ops
 import lac.vector as vector_ops
@@ -31,8 +30,9 @@ class TestMatrix(unittest.TestCase):
         self.assertTupleEqual(mat.shape, (3, 2))
 
     def test_make_random(self):
-        mat = Matrix.make_random(2, 4)
-        self.assertTupleEqual(mat.shape, (2, 4))
+        for n, m in itertools.combinations(range(2, 10), 2):
+            mat = Matrix.make_random(n, m)
+            self.assertTupleEqual(mat.shape, (n, m))
 
     def test_make_identity(self):
         for n, m in itertools.combinations(range(2, 10), 2):
@@ -74,16 +74,21 @@ class TestMatrix(unittest.TestCase):
             for i, col in enumerate(mat.itercolumns()):
                 vector_ops.almost_equal(mat[:, i], col)
 
-    def test_slicing_matrix(self):
+    def test_slicing_matrix_edges(self):
         for mat in ALL_MATRICES:
-            for i, j in itertools.product(range(mat.num_rows), range(mat.num_columns)):
-                self.assertIsInstance(mat[:i, :j], t.Union[int, float])
-
+            for i, j in itertools.product(
+                range(1, mat.num_rows + 1), range(1, mat.num_columns + 1)
+            ):
+                mat_ = mat[:i, :j]
+                self.assertIsInstance(mat_, Matrix)
+                if i < mat.num_rows and j < mat.num_columns:
+                    mat_ = mat[i:, j:]
+                    self.assertIsInstance(mat_, Matrix)
 
     def test_slicing_single_value(self):
         for mat in ALL_MATRICES:
             for i, j in itertools.product(range(mat.num_rows), range(mat.num_columns)):
-                self.assertIsInstance(mat[i, j], t.Union[int, float])
+                self.assertIsInstance(mat[i, j], (int, float))
 
     def test_matmul(self):
         for mat1, mat2 in itertools.product(ALL_MATRICES, ALL_MATRICES):

@@ -63,7 +63,7 @@ class Matrix:
     def columnvectors(self) -> t.Tuple[Vector, ...]:
         if self._columvectors is None:
             self._columvectors = tuple(
-                Vector([v[i] for v in self.rowvectors for i in range(self.num_columns)])
+                Vector(v[i] for v in self.rowvectors) for i in range(self.num_columns)
             )
         return self._columvectors
 
@@ -71,7 +71,7 @@ class Matrix:
     def rowvectors(self) -> t.Tuple[Vector, ...]:
         if self._rowvectors is None:
             self._rowvectors = tuple(
-                Vector([v[i] for v in self.columnvectors for i in range(self.num_rows)])
+                Vector(v[i] for v in self.columnvectors) for i in range(self.num_rows)
             )
         return self._rowvectors
 
@@ -94,6 +94,10 @@ class Matrix:
     @property
     def T(self):
         return transpose(self)
+
+    @property
+    def norm(self):
+        raise NotImplementedError
 
     def iterrows(self):
         for row in self.rowvectors:
@@ -142,8 +146,14 @@ class Matrix:
             elif isinstance(row, int) and isinstance(col, slice):
                 return Vector(self.rowvectors[row][col])
             else:
-                print(row, col, f"#{slice_}")
-                rowvectors = None
+                start, step, stop = row.start, row.step, row.stop
+                if start is None:
+                    start = 0
+                if step is None:
+                    step = 1
+                if stop is None:
+                    stop = self.num_rows
+                rowvectors = (self.rowvectors[i][col] for i in range(start, stop, step))
                 return type(self).from_rowvectors(rowvectors)
         else:
             raise NotImplementedError

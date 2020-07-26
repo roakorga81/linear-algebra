@@ -21,11 +21,11 @@ class Vector:
         return cls([0] * dim)
 
     @classmethod
-    def make_unitary(cls, components: t.Sequence[t.Union[int, float]]):
+    def make_unitary(cls, components: t.Iterable[t.Union[int, float]]):
         """Make a unitary vetor out of the components. """
         return build_unit_vector(cls(components))
 
-    def __init__(self, components: t.Sequence[t.Union[int, float]]):
+    def __init__(self, components: t.Iterable[t.Union[int, float]]):
         self._components = array(self.typecode, components)
         self._norm: t.Optional[t.Union[int, float]] = None
 
@@ -47,7 +47,12 @@ class Vector:
         return iter(self.components)
 
     def __getitem__(self, slice_):
-        return self.components[slice_]
+        if isinstance(slice_, int):
+            return self.components[slice_]
+        elif isinstance(slice_, slice):
+            return Vector(self.components[slice_])
+        else:
+            raise RuntimeError("unsupported slicing")
 
     def __matmul__(self, other):
         return dot(self, other)

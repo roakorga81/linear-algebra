@@ -39,6 +39,32 @@ class TestVector(unittest.TestCase):
         self.assertAlmostEqual(vec.norm, 1, PRECISION)
         self.assertEqual(vec.dim, VEC4.dim)
 
+    def test_slicing_int(self):
+        for vec in ALL_VECTORS:
+            for i in range(vec.dim):
+                element = vec[i]
+                self.assertIsInstance(element, (int, float))
+
+    def test_slicing_edges(self):
+        start = 0
+        for vec in ALL_VECTORS:
+            for s in range(start, vec.dim):
+                v = vec[s:]
+                self.assertIsInstance(v, Vector)
+            for e in range(start + 1, vec.dim):
+                v = vec[:e]
+                self.assertIsInstance(v, Vector)
+
+    def test_slicing_slice(self):
+        start = 0
+        for vec in ALL_VECTORS:
+            end = vec.dim
+            for start_ in range(start, end + 1):
+                for end_ in range(start_ + 1, end + 1):
+                    for step_ in range(1, end_):
+                        v = vec[start_:step_:end_]
+                        self.assertIsInstance(v, Vector)
+
     def test_dim(self):
         components = [3, 2, 1]
         vec = Vector(components)
