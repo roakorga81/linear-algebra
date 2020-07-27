@@ -95,7 +95,9 @@ class TestVectorOps(unittest.TestCase):
         for v1, v2 in itertools.product(ALL_VECTORS, ALL_VECTORS):
             if v1.norm > 0 and v2.norm > 0:
                 value = vector_ops.project(v1, v2)
+                value2 = v1.norm * math.cos(vector_ops.angle_between(v1, v2))
                 self.assertIsInstance(value, (int, float))
+                self.assertAlmostEqual(value, value2)
 
     def test_scale(self):
         for v, k in itertools.product(ALL_VECTORS, ALL_SCALARS):
