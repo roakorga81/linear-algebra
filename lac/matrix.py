@@ -93,11 +93,29 @@ class Matrix:
 
     @property
     def T(self):
-        return transpose(self)
+        if not hasattr(self, "_T"):
+            self._T = type(self).from_rowvectors(self.itercolumns())
+        return self._T
 
     @property
     def norm(self):
         raise NotImplementedError
+
+    @property
+    def determinant(self):
+        raise NotImplementedError
+
+    @property
+    def inverse(self):
+        raise NotImplementedError
+
+    @property
+    def trace(self):
+        if hasattr(self, "_trace"):
+            self._trace = sum(
+                row[i] for i, row in enumerate(self.iterrows()) if i < self.num_columns
+            )
+        return self._trace
 
     def iterrows(self):
         for row in self.rowvectors:
@@ -220,23 +238,6 @@ def matrix_multiply(m1: Matrix, m2: Matrix) -> Matrix:
         [vector_multiply(m2, row, from_left=True) for row in m1.iterrows()]
     )
     return out
-
-
-def transpose(m: Matrix) -> Matrix:
-    return Matrix.from_rowvectors(m.itercolumns())
-
-
-def trace(m: Matrix) -> t.Union[int, float]:
-    """Computes the sum of the diagnal entries of a matrix. """
-    return sum(row[i] for i, row in enumerate(m.iterrows()) if i < m.num_columns)
-
-
-def invert(m: Matrix) -> Matrix:
-    raise NotImplementedError
-
-
-def determinant(m: Matrix) -> Matrix:
-    raise NotImplementedError
 
 
 def almost_equal(m1: Matrix, m2: Matrix, ndigits: int = PRECISION) -> bool:

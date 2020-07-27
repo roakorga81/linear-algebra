@@ -27,11 +27,10 @@ class Vector:
 
     def __init__(self, components: t.Iterable[t.Union[int, float]]):
         self._components = array(self.typecode, components)
-        self._norm: t.Optional[t.Union[int, float]] = None
 
     @property
     def norm(self) -> t.Union[int, float]:
-        if self._norm is None:
+        if not hasattr(self, "_norm"):
             self._norm = math.sqrt(dot(self, self))
         return self._norm
 
