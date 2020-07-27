@@ -81,8 +81,21 @@ class TestMatrix(unittest.TestCase):
             for i, j in itertools.product(range(mat.num_rows), range(mat.num_columns)):
                 self.assertIsInstance(mat[i, j], (int, float))
 
-    def test_transponse(self):
-        pass
+    def test_transponse_involution(self):
+        for mat in utils.ALL_MATRICES:
+            utils.assert_matrices_almost_equal(mat.T.T, mat)
+
+    def test_transpose_addition(self):
+        for m1, m2 in itertools.product(utils.ALL_MATRICES, utils.ALL_MATRICES):
+            utils.assert_matrices_almost_equal((m1 + m2).T, m1.T + m2.T)
+
+    def test_transpose_multiplication(self):
+        for m1, m2 in itertools.product(utils.ALL_MATRICES, utils.ALL_MATRICES):
+            utils.assert_matrices_almost_equal((m1 @ m2).T, m2.T @ m1.T)
+
+    def test_transpose_scale(self):
+        for mat, k in itertools.product(utils.ALL_MATRICES, utils.ALL_SCALARS):
+            utils.assert_matrices_almost_equal((k * mat).T, k * mat.T)
 
     def test_norm(self):
         pass
