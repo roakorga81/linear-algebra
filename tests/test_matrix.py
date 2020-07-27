@@ -116,4 +116,29 @@ class TestMatrix(unittest.TestCase):
 
 
 class TestMatrixOps(unittest.TestCase):
-    pass
+    def test_scale(self):
+        pass
+
+    def test_add(self):
+        pass
+
+    def test_subtract(self):
+        pass
+
+    def test_vector_multiply(self):
+        pass
+
+    def test_matrix_multiply(self):
+        pass
+
+    def test_transpose(self):
+        pass
+
+    def test_trace(self):
+        pass
+
+    def test_invert(self):
+        pass
+
+    def test_determinant(self):
+        pass

@@ -85,10 +85,17 @@ class TestVector(unittest.TestCase):
 
 class TestVectorOps(unittest.TestCase):
     def test_build_unit_vector(self):
-        pass
+        for vec in ALL_VECTORS:
+            if vec.norm > 0:
+                unit = vector_ops.build_unit_vector(vec)
+                self.assertAlmostEqual(unit.norm, 1, PRECISION)
+                assert_vectors_almost_equal(vec.norm * unit, vec)
 
     def test_project(self):
-        pass
+        for v1, v2 in itertools.product(ALL_VECTORS, ALL_VECTORS):
+            if v1.norm > 0 and v2.norm > 0:
+                value = vector_ops.project(v1, v2)
+                self.assertIsInstance(value, (int, float))
 
     def test_scale(self):
         for v, k in itertools.product(ALL_VECTORS, ALL_SCALARS):
