@@ -97,7 +97,25 @@ class TestMatrix(unittest.TestCase):
         for mat, k in itertools.product(utils.ALL_MATRICES, utils.ALL_SCALARS):
             utils.assert_matrices_almost_equal((k * mat).T, k * mat.T)
 
-    def test_norm(self):
+    def test_transpose_det(self):
+        pass
+
+    def test_transpose_inverse(self):
+        pass
+
+    def test_transponse_eigenvalues(self):
+        pass
+
+    def test_norm_scale(self):
+        pass
+
+    def test_norm_addition(self):
+        pass
+
+    def test_norm_possitive(self):
+        pass
+
+    def test_norm_zero(self):
         pass
 
     def test_determinant(self):
