@@ -103,7 +103,25 @@ class Matrix:
 
     @property
     def determinant(self):
-        raise NotImplementedError
+        if not hasattr(self, "_det"):
+            if self.num_rows != self.num_columns:
+                raise RuntimeError(
+                    f"the determinant is only defined for square matrices"
+                )
+            if self.num_rows == 2:
+                self._det = self[0, 0] * self[1, 1] - self[0, 1] * self[1, 0]
+            else:
+                det = 0
+                for j in range(self.num_rows):
+                    columnvectors = (
+                        col
+                        for j_, col in enumerate(self[1:, :].itercolumns())
+                        if j_ != j
+                    )
+                    minor = type(self).from_columnvectors(columnvectors)
+                    det += ((-1) ** j) * self[0, j] * minor.determinant
+                self._det = det
+        return self._det
 
     @property
     def inverse(self):

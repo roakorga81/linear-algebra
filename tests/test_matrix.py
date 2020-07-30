@@ -85,17 +85,15 @@ class TestMatrix(unittest.TestCase):
         for mat in utils.ALL_MATRICES:
             utils.assert_matrices_almost_equal(mat.T.T, mat)
 
-    def test_transpose_addition(self):
-        for m1, m2 in itertools.product(utils.ALL_MATRICES, utils.ALL_MATRICES):
-            utils.assert_matrices_almost_equal((m1 + m2).T, m1.T + m2.T)
+    def test_transpose_linearity(self):
+        pass
 
     def test_transpose_multiplication(self):
         for m1, m2 in itertools.product(utils.ALL_MATRICES, utils.ALL_MATRICES):
             utils.assert_matrices_almost_equal((m1 @ m2).T, m2.T @ m1.T)
 
-    def test_transpose_scale(self):
-        for mat, k in itertools.product(utils.ALL_MATRICES, utils.ALL_SCALARS):
-            utils.assert_matrices_almost_equal((k * mat).T, k * mat.T)
+    def test_transpose_cyclic(self):
+        pass
 
     def test_transpose_det(self):
         pass
@@ -119,12 +117,20 @@ class TestMatrix(unittest.TestCase):
         pass
 
     def test_determinant(self):
-        pass
+        for mat in utils.ALL_MATRICES:
+            if mat.num_rows == mat.num_columns:
+                _ = mat.determinant
+            else:
+                with self.assertRaises(RuntimeError):
+                    _ = mat.determinant
 
     def test_inverse(self):
         pass
 
     def test_trace(self):
+        pass
+
+    def test_trace_identity(self):
         pass
 
     def test_matmul(self):
