@@ -1,4 +1,4 @@
-# LAC
+# Linear Algebra Companion
 
 This repository is not intended to be used as a linear algebra library. Rather, the purpose is to be used as a way to study linear algebra and the common operations defined in linear algebra. You can think of this repository as a self guided workbook for linear algebra.
 
