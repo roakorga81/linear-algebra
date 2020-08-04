@@ -14,7 +14,7 @@ jobs:
         - run:
             command: |
                 python3 -m venv venv
-                source venv/bin/activate
+                source ./venv/bin/activate
                 pip install .
             name: Install Python deps in a venv
         - save_cache:
@@ -22,8 +22,11 @@ jobs:
             paths:
                 - "venv"
         - run:
-            command: source venv/bin/activate
+            command: source ./venv/bin/activate
             name: activate environment
+        - run:
+            command: pip list
+            name: check environment
         - run:
             command: pytest -n 2 tests
             name: test
