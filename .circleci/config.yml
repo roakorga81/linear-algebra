@@ -4,7 +4,7 @@ jobs:
   build:
     working_directory: ~/linear-algebra
     docker:
-        - image: circleci/python:3.6.4
+        - image: circleci/python:3.6.10
     steps:
         - checkout
         - run: sudo chown -R circleci:circleci /usr/local/bin
@@ -14,15 +14,16 @@ jobs:
         - run:
             command: |
                 python3 -m venv venv
-                . venv/bin/activate
+                source venv/bin/activate
                 pip install .
             name: Install Python deps in a venv
         - save_cache:
             key: deps9-{{ .Branch }}-{{ checksum "setup.py" }}
             paths:
                 - "venv"
-                - "/usr/local/bin"
-                - "/usr/local/lib/python3.6/site-packages"
+        - run:
+            command: source venv/bin/activate
+            name: activate environment
         - run:
             command: pytest -n 2 tests
             name: test
