@@ -10,7 +10,7 @@ jobs:
         - run: sudo chown -R circleci:circleci /usr/local/bin
         - run: sudo chown -R circleci:circleci /usr/local/lib/python3.6/site-packages
         - restore_cache:
-            key: deps9-{{ .Branch }}-{{ checksum "setup.py" }}
+            key: deps1-{{ .Branch }}-{{ checksum "setup.py" }}
         - run:
             command: |
                 python3 -m venv venv
@@ -18,18 +18,14 @@ jobs:
                 pip install .
             name: Install Python deps in a venv
         - save_cache:
-            key: deps9-{{ .Branch }}-{{ checksum "setup.py" }}
+            key: deps1-{{ .Branch }}-{{ checksum "setup.py" }}
             paths:
-                - "venv"
+                - "./venv"
         - run:
-            command: source ./venv/bin/activate
-            name: activate environment
-        - run:
-            command: pip list
-            name: check environment
-        - run:
-            command: pytest -n 2 tests
-            name: test
+            command: |
+                source ./venv/bin/activate
+                pytest -n 2 tests
+            name: activate environment and run test
         - store_test_results:
             path: test-results
         - store_artifacts:
