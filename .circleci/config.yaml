@@ -1,0 +1,30 @@
+version: 2.1
+
+jobs:
+  build:
+    working_directory: ~/linear-algebra
+    docker:
+        - image: circleci/python:3.6.4
+    steps:
+        - checkout
+        - run: sudo chown -R circleci:circleci /usr/local/bin
+        - run: sudo chown -R circleci:circleci /usr/local/lib/python3.6/site-packages
+        - restore_cache:
+            key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+        - run:
+            command: pip install .
+            name: install library
+        - save_cache:
+            key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+            paths:
+                - "/usr/local/bin"
+                - "/usr/local/lib/python3.6/site-packages"
+        - run:
+            command: pytest -n 2 tests
+            name: test
+        - store_test_results:
+            path: test-results
+        - store_artifacts:
+            path: test-results
+            destination: tr1
+      
