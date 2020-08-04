@@ -1,28 +1,28 @@
 # LAC
 
-This repository is not intended to be used as a linear algebra library for computation with extensive workloads. Rather, the purpose is to be used as a mean to study linear algebra and the common operations defined in linear algebra. You can think of this repository as a self guided workbook for linear algebra.
+This repository is not intended to be used as a linear algebra library. Rather, the purpose is to be used as a way to study linear algebra and the common operations defined in linear algebra. You can think of this repository as a self guided workbook for linear algebra.
 
-This repository can also be seen as a Python workbook, since you would get familiar with building a Python library as you go through. This is the reason to not use Numpy (the most used numeric Python library). If we were to use that library, we would end up calling already made functions and objects instead of building our own. 
+This repository can also be seen as a Python workbook, since you would get familiar with building a Python library as you go through. This is the reason to not use Numpy (the most used numeric Python library). If we were to use that library, we would end up calling already made functions and objects instead of building our own and understanding the operations used in linear algebra. 
 
 ## Your Task
 
-What you should do is that you should implement the library. The library consist of the class vector and matrix, its relations and commont operations.
+What you should do is that you should implement the library. The library consist of the class vector and matrix, and common operations. You will notice that you are given the test cases for each of the implementaions required. Please report an issue if you find that a test case is wrong. 
 
+### Library desing
+
+We have two simple classes, `Vector` and `Matrix`, which represent the mathematical objects with the same name. These classes offer some ways of building commonly used instances by using classmethods, for instance, the class `Vector` has `classmethod` named `make_random` to build a vector out of random entries. Both classes make some mathematical operator overloading allowed by python, so we can sum two vectors by simply using `+ `. We also implement some features that make the classes look like native Pyhton, by going through the implementation of such classes you could learn a lot about Python.
+
+We reserve the use of the `property` decorator to attributes that are of the very nature of the object. For instance, every vector has a norm (here we use the euclidean one) and that is a property of each `Vector` instance. The same is true for the `determinant` and `inverse` of a matrix, even though they may be undefined, which is reported by raising an error with a well descriptive message. Additionally, there are some functions that operate on vectors, some on matrices and some on both. 
+
+The tests cases for all implementations aim to hide implementation details, since otherwise the implementation can be derived from there. We make an effort to implement tests cases as the mathematical properties of whatever is being tested. Hopefully this will give the user yet another chance to see how mathematical relations can be implemented in Python code.
+
+Finally, we favor type hints and self descriptive names over docstrings, but we make use of docstrings when we need to (when it is not redundant given the names and typehints used.)
 
 ## Contribute
 
-Please do contribute buy providing feedback, reporting issues, commenting or making PRs.
+All forms of contributing are highly appreciated, please read the [contributing guide](./CONTRIBUTING.md)
 
-## TODO
+## Collaborators
 
-- Add graphic representations of the result of operations.
-
-
-## Getting the answers
-
-I use this workbook as a teaching material at some courses, so the actual implementation is not given by default in the repository. The actual implementation is in the `answers` branch. However, those are encripted, so you won't be able to get the implementation details unless I give you the key. I want to give the key to anyone who thinks they require it, so please email me if you want it. I can respond within one or two weeks, making sure that you have enought time to try to implement it by your self.
-
-## FAQ
-
-1. Why all the trouble with the key?
->I do not really know, I just feel it was the right way to do it. 
+- Sebastián Rodríguez Colina
+- [Add your name here!](./CONTRIBUTING.md)

@@ -3,6 +3,7 @@ import random
 import reprlib
 import typing as t
 from array import array
+from collections.abc import Iterable
 
 from lac import PRECISION
 
@@ -42,17 +43,6 @@ class Vector:
     def dim(self) -> int:
         return len(self.components)
 
-    def __iter__(self):
-        return iter(self.components)
-
-    def __getitem__(self, slice_):
-        if isinstance(slice_, int):
-            return self.components[slice_]
-        elif isinstance(slice_, slice):
-            return Vector(self.components[slice_])
-        else:
-            raise RuntimeError("unsupported slicing")
-
     def __matmul__(self, other):
         return dot(self, other)
 
@@ -76,6 +66,39 @@ class Vector:
 
     def __eq__(self, other):
         return almost_equal(self, other)
+
+    def __iter__(self):
+        return iter(self.components)
+
+    def __getitem__(self, slice_):
+        if isinstance(slice_, int):
+            return self.components[slice_]
+        elif isinstance(slice_, slice):
+            return Vector(self.components[slice_])
+        else:
+            raise RuntimeError("unsupported slice")
+
+    def __setitem__(self, slice_, value):
+        if isinstance(slice_, int) and isinstance(value, (int, float)):
+            self.components[slice_] = value
+        elif isinstance(slice_, slice) and isinstance(
+            value, (int, float, list, tuple, array, Vector)
+        ):
+            start = 0 if slice_.start is None else slice_.start
+            stop = (
+                len(self.components)
+                if slice_.stop is None
+                else min(slice_.stop, len(self.components))
+            )
+            step = 1 if slice_.step is None else slice_.step
+            length = math.ceil((stop - start) / step)
+            if isinstance(value, (int, float)):
+                value = [value] * length
+            self.components[slice_] = array(self.typecode, value)
+        else:
+            raise TypeError(
+                f"unsupported combination of slice ({slice_}) and value ({value})"
+            )
 
     def __repr__(self):
         components = reprlib.repr([round(c, 3) for c in self.components])
@@ -172,7 +195,12 @@ def project(v: Vector, d: Vector) -> t.Union[int, float]:
 
 
 def almost_equal(v1: Vector, v2: Vector, ndigits: int = PRECISION) -> bool:
-    return (
-        all(round(c1, ndigits) == round(c2, ndigits) for c1, c2 in zip(v1, v2))
-        and v1.dim == v2.dim
-    )
+    _validate_vectors_same_dim(v1, v2)
+    return all(round(c1, ndigits) == round(c2, ndigits) for c1, c2 in zip(v1, v2))
+
+
+def _validate_vectors_same_dim(v1: Vector, v2: Vector):
+    if v1.dim != v2.dim:
+        raise ValueError(
+            f"vectors must have the same dimension, got {v1.dim} and {v2.dim}"
+        )

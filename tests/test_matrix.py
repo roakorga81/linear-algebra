@@ -1,3 +1,4 @@
+import copy
 import itertools
 import math
 import unittest
@@ -15,10 +16,6 @@ class TestMatrix(unittest.TestCase):
             [Vector([1, 0]), Vector([0, 1]), Vector([0, 0])]
         )
         self.assertTupleEqual(mat.shape, (2, 3))
-
-    def test_from_rowvectors(self):
-        mat = Matrix.from_rowvectors([Vector([1, 0]), Vector([0, 1]), Vector([0, 0])])
-        self.assertTupleEqual(mat.shape, (3, 2))
 
     def test_make_random(self):
         for n, m in itertools.combinations(range(2, 10), 2):
@@ -55,31 +52,151 @@ class TestMatrix(unittest.TestCase):
                 self.assertEqual(col.dim, mat.num_rows)
             self.assertEqual(i + 1, mat.num_columns)
 
-    def test_slicing_row(self):
-        for mat in utils.ALL_MATRICES:
-            for i, row in enumerate(mat.iterrows()):
-                vector_ops.almost_equal(mat[i], row)
-
-    def test_slicing_column(self):
-        for mat in utils.ALL_MATRICES:
-            for i, col in enumerate(mat.itercolumns()):
-                vector_ops.almost_equal(mat[:, i], col)
-
-    def test_slicing_matrix_edges(self):
-        for mat in utils.ALL_MATRICES:
-            for i, j in itertools.product(
-                range(1, mat.num_rows + 1), range(1, mat.num_columns + 1)
-            ):
-                mat_ = mat[:i, :j]
-                self.assertIsInstance(mat_, Matrix)
-                if i < mat.num_rows and j < mat.num_columns:
-                    mat_ = mat[i:, j:]
-                    self.assertIsInstance(mat_, Matrix)
-
-    def test_slicing_single_value(self):
+    def test_getitem_single_value(self):
         for mat in utils.ALL_MATRICES:
             for i, j in itertools.product(range(mat.num_rows), range(mat.num_columns)):
                 self.assertIsInstance(mat[i, j], (int, float))
+
+    def test_getitem_row(self):
+        for mat in utils.ALL_MATRICES:
+            for i, row in enumerate(mat.iterrows()):
+                self.assertIsInstance(mat[i], Vector)
+                vector_ops.almost_equal(mat[i], row)
+
+    def test_getitiem_slice_rows(self):
+        for mat in utils.ALL_MATRICES:
+            for start in range(0, mat.num_rows):
+                for stop in range(start + 1, mat.num_rows + 1):
+                    for step in range(1, stop):
+                        m1 = mat[start:stop:step]
+                        m2 = mat[start:stop:step, :]
+                        length = math.ceil((stop - start) / step)
+                        self.assertIsInstance(m1, Matrix)
+                        self.assertIsInstance(m2, Matrix)
+                        self.assertEqual(m1, m2)
+                        self.assertEqual(m1.shape, (length, mat.num_columns))
+
+    def test_getitem_column(self):
+        for mat in utils.ALL_MATRICES:
+            for i, col in enumerate(mat.itercolumns()):
+                self.assertIsInstance(mat[:, i], Vector)
+                vector_ops.almost_equal(mat[:, i], col)
+
+    def test_getitiem_slice_columns(self):
+        for mat in utils.ALL_MATRICES:
+            for start in range(0, mat.num_columns):
+                for stop in range(start + 1, mat.num_columns + 1):
+                    for step in range(1, stop):
+                        m = mat[:, start:stop:step]
+                        length = math.ceil((stop - start) / step)
+                        self.assertIsInstance(m, Matrix)
+                        self.assertEqual(m.shape, (mat.num_rows, length))
+
+    def test_getitem(self):
+        for mat in utils.ALL_MATRICES:
+            STOP = min(mat.num_rows, mat.num_columns)
+            for start in range(0, STOP):
+                for stop in range(start + 1, STOP + 1):
+                    for step in range(1, stop):
+                        m = mat[start:stop:step, start:stop:step]
+                        self.assertIsInstance(m, Matrix)
+                        if m.shape == mat.shape:
+                            utils.assert_matrices_almost_equal(m, mat)
+
+    def test_setitem_row_as_int(self):
+        all_matrices = copy.deepcopy(utils.ALL_MATRICES)
+        for mat, k in itertools.product(all_matrices, utils.ALL_SCALARS):
+            vec = Vector([k] * mat.num_columns)
+            for start in range(0, mat.num_rows):
+                mat[start] = k
+                utils.assert_vectors_almost_equal(mat[start], vec)
+
+    def test_setitem_row_as_sequence(self):
+        factories = [lambda x: x, lambda x: x.components, list, tuple]
+        all_matrices = copy.deepcopy(utils.ALL_MATRICES)
+        for mat, k in itertools.product(all_matrices, utils.ALL_SCALARS):
+            vec = Vector([k] * mat.num_columns)
+            for start in range(0, mat.num_rows):
+                for fac in factories:
+                    mat[start] = fac(vec)
+                    utils.assert_vectors_almost_equal(mat[start], vec)
+
+    def test_setitem_row_slice_as_int(self):
+        all_matrices = copy.deepcopy(utils.ALL_MATRICES)
+        for mat, k in itertools.product(all_matrices, utils.ALL_SCALARS):
+            vec = Vector([k] * mat.num_columns)
+            for start in range(0, mat.num_rows):
+                for stop in range(start + 1, mat.num_rows + 1):
+                    for step in range(1, stop):
+                        mat[start:stop:step] = k
+                        for i in range(start, stop, step):
+                            utils.assert_vectors_almost_equal(mat[i], vec)
+
+    def test_setitem_row_slice_as_sequence(self):
+        factories = [lambda x: x, lambda x: x.components, list, tuple]
+        all_matrices = copy.deepcopy(utils.ALL_MATRICES)
+        for mat, k in itertools.product(all_matrices, utils.ALL_SCALARS):
+            vec = Vector([k] * mat.num_columns)
+            for start in range(0, mat.num_rows):
+                for stop in range(start + 1, mat.num_rows + 1):
+                    for step in range(1, stop):
+                        for fac in factories:
+                            mat[start:stop:step] = fac(vec)
+                            for i in range(start, stop, step):
+                                utils.assert_vectors_almost_equal(mat[i], vec)
+
+    def test_setitem_column_as_int(self):
+        all_matrices = copy.deepcopy(utils.ALL_MATRICES)
+        for mat, k in itertools.product(all_matrices, utils.ALL_SCALARS):
+            vec = Vector([k] * mat.num_rows)
+            for start in range(0, mat.num_columns):
+                mat[:, start] = k
+                utils.assert_vectors_almost_equal(mat[:, start], vec)
+
+    def test_setitem_column_as_sequence(self):
+        factories = [lambda x: x, lambda x: x.components, list, tuple]
+        all_matrices = copy.deepcopy(utils.ALL_MATRICES)
+        for mat, k in itertools.product(all_matrices, utils.ALL_SCALARS):
+            vec = Vector([k] * mat.num_rows)
+            for start in range(0, mat.num_columns):
+                for fac in factories:
+                    mat[:, start] = fac(vec)
+                    utils.assert_vectors_almost_equal(mat[:, start], vec)
+
+    def test_setitem_column_slice_as_int(self):
+        all_matrices = copy.deepcopy(utils.ALL_MATRICES)
+        for mat, k in itertools.product(all_matrices, utils.ALL_SCALARS):
+            vec = Vector([k] * mat.num_rows)
+            for start in range(0, mat.num_columns):
+                for stop in range(start + 1, mat.num_columns + 1):
+                    for step in range(1, stop):
+                        mat[:, start:stop:step] = k
+                        for i in range(start, stop, step):
+                            utils.assert_vectors_almost_equal(mat[:, i], vec)
+
+    def test_setitem_column_slice_as_sequence(self):
+        factories = [lambda x: x, lambda x: x.components, list, tuple]
+        all_matrices = copy.deepcopy(utils.ALL_MATRICES)
+        for mat, k in itertools.product(all_matrices, utils.ALL_SCALARS):
+            vec = Vector([k] * mat.num_columns)
+            for start in range(0, mat.num_rows):
+                for stop in range(start + 1, mat.num_rows + 1):
+                    for step in range(1, stop):
+                        for fac in factories:
+                            mat[:, start:stop:step] = fac(vec)
+                            for i in range(start, stop, step):
+                                utils.assert_vectors_almost_equal(mat[:, i], vec)
+
+    def test_setitem_as_int(self):
+        all_matrices = copy.deepcopy(utils.ALL_MATRICES)
+        for mat, k in itertools.product(all_matrices, utils.ALL_SCALARS):
+            for i in range(mat.num_rows):
+                for j in range(mat.num_columns):
+                    mat[i, j] = k
+                    self.assertEqual(mat[i, j], k)
+
+    def test_setitem_as_matrix(self):
+        pass
 
     def test_transponse_involution(self):
         for mat in utils.ALL_MATRICES:
@@ -210,3 +327,7 @@ class TestMatrixOps(unittest.TestCase):
             else:
                 with self.assertRaises(ValueError):
                     _ = matrix_ops.matrix_multiply(m1, m2)
+
+    def test_gaussian_elimination(self):
+        pass
+

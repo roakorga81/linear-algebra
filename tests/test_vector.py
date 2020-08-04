@@ -1,3 +1,4 @@
+import copy
 import itertools
 import math
 import unittest
@@ -29,31 +30,52 @@ class TestVector(unittest.TestCase):
                 self.assertEqual(v.dim, vec.dim)
                 utils.assert_vectors_almost_equal(vec.norm * v, vec)
 
-    def test_slicing_int(self):
+    def test_getitem_int(self):
         for vec in utils.ALL_VECTORS:
             for i in range(vec.dim):
-                element = vec[i]
-                self.assertIsInstance(element, (int, float))
+                self.assertIsInstance(vec[i], (int, float))
 
-    def test_slicing_edges(self):
-        start = 0
+    def test_getitem(self):
         for vec in utils.ALL_VECTORS:
-            for s in range(start, vec.dim):
-                v = vec[s:]
-                self.assertIsInstance(v, Vector)
-            for e in range(start + 1, vec.dim):
-                v = vec[:e]
-                self.assertIsInstance(v, Vector)
-
-    def test_slicing_slice(self):
-        start = 0
-        for vec in utils.ALL_VECTORS:
-            end = vec.dim
-            for start_ in range(start, end + 1):
-                for end_ in range(start_ + 1, end + 1):
-                    for step_ in range(1, end_):
-                        v = vec[start_:step_:end_]
+            for start in range(0, vec.dim + 1):
+                for stop in range(start + 1, vec.dim + 2):
+                    for step in range(1, stop):
+                        v = vec[start:step:stop]
                         self.assertIsInstance(v, Vector)
+
+    def test_setitem_int(self):
+        all_vecs = copy.deepcopy(utils.ALL_VECTORS)
+        for vec, k in itertools.product(all_vecs, utils.ALL_SCALARS):
+            for i in range(vec.dim):
+                vec[i] = k
+                self.assertIsInstance(vec[i], (int, float))
+                self.assertAlmostEqual(vec[i], k)
+
+    def test_setitem_slice_to_int(self):
+        all_vecs = copy.deepcopy(utils.ALL_VECTORS)
+        for vec, k in itertools.product(all_vecs, utils.ALL_SCALARS):
+            for start in range(0, vec.dim + 1):
+                for stop in range(start + 1, vec.dim + 2):
+                    for step in range(1, stop):
+                        vec[start:stop:step] = k
+                        length = math.ceil((min(stop, len(vec)) - start) / step)
+                        real = vec[start:stop:step]
+                        expected = Vector([k] * length)
+                        self.assertIsInstance(real, Vector)
+                        self.assertEqual(real, expected)
+
+    def test_setitem_slice_to_sequence(self):
+        all_vecs = copy.deepcopy(utils.ALL_VECTORS)
+        for vec, k in itertools.product(all_vecs, utils.ALL_SCALARS):
+            for start in range(0, vec.dim + 1):
+                for stop in range(start + 1, vec.dim + 2):
+                    for step in range(1, stop):
+                        length = math.ceil((stop - start) / step)
+                        expected = Vector([k] * length)
+                        vec[start:stop:step] = expected
+                        real = vec[start:stop:step]
+                        self.assertIsInstance(real, Vector)
+                        self.assertEqual(real, expected)
 
     def test_dim(self):
         components = [3, 2, 1]
