@@ -25,6 +25,9 @@ jobs:
                 pytest tests
 
   deploy:
+    working_directory: ~/linear-algebra
+    docker:
+        - image: circleci/python:3.6.10
     steps:
         - run:
             name: "show dir"
