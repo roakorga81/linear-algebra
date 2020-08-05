@@ -1,7 +1,7 @@
 version: 2.1
 
 jobs:
-  build:
+  build-test:
     working_directory: ~/linear-algebra
     docker:
         - image: circleci/python:3.6.10
@@ -11,17 +11,40 @@ jobs:
         - restore_cache:
             key: deps1-{{ .Branch }}-{{ checksum "setup.py" }}
         - run:
+            name: Install Python deps in a venv
             command: |
                 python3 -m venv venv
                 source ./venv/bin/activate
                 pip install .
-            name: Install Python deps in a venv
         - save_cache:
             key: deps1-{{ .Branch }}-{{ checksum "setup.py" }}
             paths:
                 - "./venv"
         - run:
+            name: test
             command: |
                 source ./venv/bin/activate
                 pytest tests
-            name: test
+
+  deploy:
+    steps:
+        - run:
+            name: "show dir"
+            command: ls -la
+
+workflows:
+    version: 2
+    build-test-deploy:
+        jobs:
+            - build-test:
+                filters:
+                    branches:
+                        only:
+                            - master
+            - hold:
+                type: approval
+                requires:
+                    - build
+            - deploy:
+                requires:
+                    - hold
