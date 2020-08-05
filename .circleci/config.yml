@@ -1,5 +1,5 @@
 jobs:
-  build:
+  build-test:
     working_directory: ~/linear-algebra
     docker:
         - image: circleci/python:3.6.10
@@ -28,16 +28,23 @@ jobs:
     working_directory: ~/linear-algebra
     docker:
         - image: circleci/python:3.6.10
+    resource_class: small
     steps:
         - run:
-            name: "show dir"
-            command: ls -la
+            name: "create-repo"
+            command: |
+                echo "# linear-algebra" >> README.md
+                git init
+                git add README.md
+                git commit -m "first commit"
+                git remote add origin git@github.com:open-workbooks/linear-algebra.git
+                git push -u origin master            
 
 workflows:
     version: 2
     build-test-deploy:
         jobs:
-            - build:
+            - build-test:
                 filters:
                     branches:
                         only: master
