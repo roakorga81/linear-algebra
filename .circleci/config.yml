@@ -30,14 +30,17 @@ jobs:
         - image: circleci/python:3.6.10
     resource_class: small
     steps:
+        - add_ssh_keys:
+            fingerprints:
+                - "21:a6:81:44:96:78:3a:a4:88:89:7f:43:ac:b7:ab:69"
         - run:
             name: "create-repo"
             command: |
-                echo "# linear-algebra" >> README.md
-                git init
+                git clone origin git@github.com:open-workbooks/linear-algebra.git
+                cd linear-algebra
+                echo "# linear-algebra-test" >> README.md
                 git add README.md
-                git commit -m "first commit"
-                git remote add origin git@github.com:open-workbooks/linear-algebra.git
+                git commit -m "deployment test"
                 git push -u origin master            
 
 workflows:
