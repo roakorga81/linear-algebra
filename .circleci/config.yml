@@ -38,10 +38,12 @@ jobs:
             command: |
                 git clone origin git@github.com:open-workbooks/linear-algebra.git
                 cd linear-algebra
-                echo "# linear-algebra-test2" >> README.md
+                cat README.md
+                echo "# linear-algebra-test3" >> README.md
+                cat RAEDME.md
                 git add README.md
                 git commit -m "deployment test"
-                git push -u origin master            
+                git push          
 
 workflows:
     version: 2
