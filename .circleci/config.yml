@@ -36,6 +36,8 @@ jobs:
         - run:
             name: "create-repo"
             command: |
+                git config --global user.name "srcolinas-machine-user"
+                git config --global user.email "srcolinas+machine@gmail.com"
                 git clone https://github.com/open-workbooks/linear-algebra.git
                 ls -la
                 cd linear-algebra
