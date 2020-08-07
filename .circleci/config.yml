@@ -36,8 +36,10 @@ jobs:
         - run:
             name: "create-repo"
             command: |
-                git clone origin git@github.com:open-workbooks/linear-algebra.git
+                git clone git@github.com:open-workbooks/linear-algebra.git
+                ls -la
                 cd linear-algebra
+                ls -la
                 cat README.md
                 echo "# linear-algebra-test3" >> README.md
                 cat RAEDME.md
