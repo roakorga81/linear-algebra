@@ -40,7 +40,7 @@ jobs:
             name: "create-repo"
             command: |
                 ls -la
-                git clone git@github.com:open-workbooks/linear-algebra.git
+                git clone https://github.com/open-workbooks/linear-algebra.git
                 ls -la
                 cd linear-algebra
                 ls -la
