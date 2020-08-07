@@ -35,7 +35,7 @@ jobs:
                 - "21:a6:81:44:96:78:3a:a4:88:89:7f:43:ac:b7:ab:69"
         - run:
             name: Avoid hosts unknown for github
-            command: mkdir ~/.ssh/ && echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
+            command: echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
         - run:
             name: "create-repo"
             command: |
