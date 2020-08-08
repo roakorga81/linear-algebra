@@ -17,7 +17,7 @@ jobs:
     - name: build and push
       run: |
         ls -la
-        git clone git@github.com:open-workbooks/linear-algebra.git
+        git clone https://github.com/open-workbooks/linear-algebra-answers.git
         ls -la
         cd linear-algebra
         ls -la
