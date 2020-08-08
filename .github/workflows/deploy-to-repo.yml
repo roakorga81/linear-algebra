@@ -15,3 +15,13 @@ jobs:
     - name: build and push
       run: |
         ls -la
+        git clone git@github.com:open-workbooks/linear-algebra.git
+        ls -la
+        cd linear-algebra
+        ls -la
+        cat README.md
+        echo "# linear-algebra-actions" >> README.md
+        cat README.md
+        git add README.md
+        git commit -m "deploy"
+        git push
