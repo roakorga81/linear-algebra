@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import copy
 import typing as t
 from array import array
@@ -82,7 +84,7 @@ class Matrix:
         return (self.num_rows, self.num_columns)
 
     @property
-    def T(self):
+    def T(self) -> Matrix:
         if not hasattr(self, "_T"):
             ## homework:start
             self._T = 
@@ -90,7 +92,7 @@ class Matrix:
         return self._T
 
     @property
-    def norm(self):
+    def norm(self) -> float:
         if not hasattr(self, "_norm"):
             ## homework:start
             self._norm = 
@@ -98,7 +100,7 @@ class Matrix:
         return self._T
 
     @property
-    def determinant(self):
+    def determinant(self) -> float:
         if not hasattr(self, "_det"):
             ## homework:start
             self._det = 
@@ -106,7 +108,7 @@ class Matrix:
         return self._det
 
     @property
-    def inverse(self):
+    def inverse(self) -> Matrix:
         if not hasattr(self, "_inverse"):
             ## homework:start
             self._inverse = 
@@ -114,7 +116,7 @@ class Matrix:
         return self._inverse
 
     @property
-    def trace(self):
+    def trace(self) -> float:
         if not hasattr(self, "_trace"):
             ## homework:start
             self_trace = 
@@ -132,38 +134,38 @@ class Matrix:
     def __eq__(self, other):
         return almost_equal(self, other)
 
-    def __matmul__(self, other):
+    def __matmul__(self, other: Matrix) -> Matrix:
         ## homework:start
         return 
         ## homework:end
 
-    def __add__(self, other):
+    def __add__(self, other: Matrix) -> Matrix:
         ## homework:start
         return
         ## homework:end
 
-    def __rmul__(self, k):
+    def __rmul__(self, k: t.Union[int, float]) -> Matrix:
         ## homework:start
         return
         ## homework:end
 
-    def __neg__(self):
+    def __neg__(self) -> Matrix:
         ## homework:start
         return
         ## homework:end
 
-    def __sub__(self, other):
+    def __sub__(self, other: Matrix) -> Matrix:
         ## homework:start
         return
         ## homework:end
 
-    def __abs__(self):
+    def __abs__(self) -> float:
         return self.norm
 
     def __iter__(self):
         return self.iterrows()
 
-    def __len__(self):
+    def __len__(self) -> int:
         return self.num_rows
 
     def __getitem__(self, slice_):

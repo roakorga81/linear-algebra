@@ -12,12 +12,12 @@ Issues can be completely arbitrary, so helping us going through them is of great
 
 2. **Making PRs**
 
-The following are valid reasons to make a PR:
+The best way of making PRs is by first [gaining access to the repo with the answers](https://forms.gle/atFNQEUxryN72L189) and make the PRs there, that way we can integrate the whole workflow. However, we appreciate if you want to contribute in any way that is most convenient for you. We just ask you to do not reveal implementation details in your PRs or issues. The following are valid reasons to make a PR:
 
 - Solve a bug reported as issue (including typos).
 - Improve documentation.
 - Improve tests.
-- Implement one of the upcomming features described bellow.
+- Implement one of the upcomming features described bellow (being a collaborator is required, since any PR would required to reveal implementation).
 
 
 ## Upcomming features
@@ -25,4 +25,5 @@ The following are valid reasons to make a PR:
 - LU Factorization.
 - Inverses.
 - Linear equation solver.
+- Plotting library
 - Notebooks for illustration of concepts.

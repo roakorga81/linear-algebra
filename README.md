@@ -1,4 +1,4 @@
-# Linear Algebra Companion
+# Linear Algebra Workbook
 
 This repository is not intended to be used as a linear algebra library. Rather, the purpose is to be used as a way to study linear algebra and the common operations defined in linear algebra. You can think of this repository as a self guided workbook for linear algebra.
 
@@ -6,7 +6,16 @@ This repository can also be seen as a Python workbook, since you would get famil
 
 ## Your Task
 
-What you should do is that you should implement the library. The library consist of the class vector and matrix, and common operations. You will notice that you are given the test cases for each of the implementaions required. Please report an issue if you find that a test case is wrong. 
+What you should do is that you should implement the library. The library consist of the class vector and matrix, and common operations. You will notice that you are given the test cases for each of the implementaions required. Please report an issue if you find that a test case is wrong. To start, please do:
+
+```
+git clone https://github.com/open-workbooks/linear-algebra.git
+cd linear-algebra
+pip install -e ".[dev]"
+```
+
+Now you can run the tests and start implementing your own linear algebra library!
+
 
 ### Library desing
 
@@ -17,6 +26,10 @@ We reserve the use of the `property` decorator to attributes that are of the ver
 The tests cases for all implementations aim to hide implementation details, since otherwise the implementation can be derived from there. We make an effort to implement tests cases as the mathematical properties of whatever is being tested. Hopefully this will give the user yet another chance to see how mathematical relations can be implemented in Python code.
 
 Finally, we favor type hints and self descriptive names over docstrings, but we make use of docstrings when we need to (when it is not redundant given the names and typehints used.)
+
+## Where to get the answers
+
+The workbook is splited into two repositories `open-workbooks/linear-algebra` and `open-workbooks/linear-algebra-answers`, which hold the task and the answers respectively. Since this worbook can be used as teaching material, the repo with the ansers is a private repository, but we can give you access to the private repository if you fill out our [collaborators form](https://forms.gle/atFNQEUxryN72L189).
 
 ## Contribute
 

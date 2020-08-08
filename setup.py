@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-required = ["pytest", "pytest-xdist", "pytest-cov", "black", "mypy"]
+dev_required = ["pytest", "pytest-xdist", "pytest-cov", "black", "mypy", "pydocstyle"]
 
 setup(
     name="lac",
@@ -10,6 +10,6 @@ setup(
     python_requires=">=3.6",
     packages=find_packages(),
     include_package_data=True,
-    install_requires=required,
+    extras_require={"dev": dev_required},
     package_dir={"": "."},
 )

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import math
 import random
 import reprlib
@@ -40,22 +42,22 @@ class Vector:
             ## homework:end
         return self._norm
 
-    def __matmul__(self, other):
+    def __matmul__(self, other: Vector) -> float:
         ## homework:start
         return
         ## homework:end
 
-    def __add__(self, other):
+    def __add__(self, other: Vector) -> Vector:
         ## homework:start
         return
         ## homework:end
 
-    def __neg__(self):
+    def __neg__(self) -> Vector:
         ## homework:start
         return
         ## homework:end
 
-    def __sub__(self, other):
+    def __sub__(self, other: Vector) -> Vector:
         ## homework:start
         return
         ## homework:end
@@ -153,7 +155,7 @@ def subtract(v1: Vector, v2: Vector) -> Vector:
     return output_vector
 
 
-def dot(v1: Vector, v2: Vector) -> t.Union[int, float]:
+def dot(v1: Vector, v2: Vector) -> float:
     """Computes the dot product of two vectors.
 
     Raises:
@@ -169,7 +171,7 @@ def dot(v1: Vector, v2: Vector) -> t.Union[int, float]:
     return output_value
 
 
-def angle_between(v1: Vector, v2: Vector) -> t.Union[int, float]:
+def angle_between(v1: Vector, v2: Vector) -> float:
     """Computes the angle between two vectors. """
     ## homework:start
     alpha =
