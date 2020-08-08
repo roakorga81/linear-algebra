@@ -67,17 +67,15 @@ class Matrix:
 
     @property
     def num_columns(self) -> int:
-        ## homework:replace:on
-        #.return
-        return self._rowvectors[0].dim
-        ## homework:replace:off
+        ## homework:start
+        return
+        ## homework:end
 
     @property
     def num_rows(self) -> int:
-        ## homework:replace:on
-        #.return
-        return len(self._rowvectors)
-        ## homework:replace:off
+        ## homework:start
+        return
+        ## homework:end
 
     @property
     def shape(self) -> t.Tuple[int, int]:
@@ -86,64 +84,41 @@ class Matrix:
     @property
     def T(self):
         if not hasattr(self, "_T"):
-            ## homework:replace:on
-            #.self._T = 
-            self._T = type(self)(self.itercolumns())
-            ## homework:replace:off
+            ## homework:start
+            self._T = 
+            ## homework:end
         return self._T
 
     @property
     def norm(self):
         if not hasattr(self, "_norm"):
-            ## homework:replace:on
-            #.self._norm = 
-            self._norm = None
-            ## homework:replace:off
+            ## homework:start
+            self._norm = 
+            ## homework:end
         return self._T
 
     @property
     def determinant(self):
         if not hasattr(self, "_det"):
-            ## homework:replace:on
-            #.self._det = 
-            if self.num_rows != self.num_columns:
-                raise RuntimeError(
-                    f"the determinant is only defined for square matrices"
-                )
-            if self.num_rows == 2:
-                self._det = self[0, 0] * self[1, 1] - self[0, 1] * self[1, 0]
-            else:
-                det = 0
-                for j in range(self.num_rows):
-                    columnvectors = (
-                        col
-                        for j_, col in enumerate(self[1:, :].itercolumns())
-                        if j_ != j
-                    )
-                    minor = type(self).from_columnvectors(columnvectors)
-                    det += ((-1) ** j) * self[0, j] * minor.determinant
-                self._det = det
-            ## homework:replace:off
+            ## homework:start
+            self._det = 
+            ## homework:end
         return self._det
 
     @property
     def inverse(self):
         if not hasattr(self, "_inverse"):
-            ## homework:replace:on
-            #.self._inverse = 
-            self._inverse = None
-            ## homework:replace:off
+            ## homework:start
+            self._inverse = 
+            ## homework:end
         return self._inverse
 
     @property
     def trace(self):
         if not hasattr(self, "_trace"):
-            ## homework:replace:on
-            #.self_trace = 
-            self._trace = sum(
-                row[i] for i, row in enumerate(self.iterrows()) if i < self.num_columns
-            )
-            ## homework:replace:off
+            ## homework:start
+            self_trace = 
+            ## homework:end
         return self._trace
 
     def iterrows(self) -> t.Generator[Vector, None, None]:
@@ -158,34 +133,29 @@ class Matrix:
         return almost_equal(self, other)
 
     def __matmul__(self, other):
-        ## homework:replace:on
-        #.return 
-        return matrix_multiply(self, other)
-        ## homework:repace:off
+        ## homework:start
+        return 
+        ## homework:end
 
     def __add__(self, other):
-        ## homework:replace:on
-        #.return
-        return add(self, other)
-        ## homework:repace:off
+        ## homework:start
+        return
+        ## homework:end
 
     def __rmul__(self, k):
-        ## homework:replace:on
-        #.return
-        return scale(self, k)
-        ## homework:repace:off
+        ## homework:start
+        return
+        ## homework:end
 
     def __neg__(self):
-        ## homework:replace:on
-        #.return
-        return scale(self, -1)
-        ## homework:repace:off
+        ## homework:start
+        return
+        ## homework:end
 
     def __sub__(self, other):
-        ## homework:replace:on
-        #.return
-        return subtract(self, other)
-        ## homework:repace:off
+        ## homework:start
+        return
+        ## homework:end
 
     def __abs__(self):
         return self.norm
@@ -293,28 +263,25 @@ def _make_identity_rowvectors(num_rows, num_columns):
 
 def scale(m: Matrix, k: t.Union[int, float]) -> Matrix:
     """Scale matrix m by k. """
-    ## homework:replace:on
-    #.output_matrix = 
-    output_matrix = Matrix(k * v for v in m.iterrows())
-    ## homework:replace:off
+    ## homework:start
+    output_matrix = 
+    ## homework:end
     return output_matrix
 
 
 def add(m1: Matrix, m2: Matrix) -> Matrix:
     """Adds two matrices. """
-    ## homework:replace:on
-    #.output_matrix = 
-    output_matrix = Matrix(v1 + v2 for v1, v2 in zip(m1.iterrows(), m2.iterrows()))
-    ## homework:replace:off
+    ## homework:start
+    output_matrix = 
+    ## homework:end
     return output_matrix
 
 
 def subtract(m1: Matrix, m2: Matrix) -> Matrix:
     """Substracts the second matrix from the first one. """
-    ## homework:replace:on
-    #.output_matrix = 
-    output_matrix = add(m1, scale(m2, -1))
-    ## homework:replace:off
+    ## homework:start
+    output_matrix = 
+    ## homework:end
     return output_matrix
 
 

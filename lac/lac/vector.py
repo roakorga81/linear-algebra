@@ -35,61 +35,40 @@ class Vector:
 
     @property
     def dim(self) -> int:
-        ## homework:replace:on
-        #.return
-        return len(self.components)
-        # homework:replace:off
-
-    @property
-    def norm(self) -> t.Union[int, float]:
-        if not hasattr(self, "_norm"):
-            ## homework:replace:on
-            #.self._norm =
-            self._norm = math.sqrt(dot(self, self))
-            ## homework:replace:off
+            ## homework:start
+            self._norm =
+            ## homework:end
         return self._norm
 
     def __matmul__(self, other):
-        ## homework:replace:on
-        #.return
-        return dot(self, other)
-        ## homework:replace:off
+        ## homework:start
+        return
+        ## homework:end
 
     def __add__(self, other):
-        ## homework:replace:on
-        #.return
-        return add(self, other)
-        ## homework:replace:on
-
-    def __rmul__(self, k):
-        ## homework:replace:on
-        #.return
-        return scale(self, k)
-        ## homework:replace:off
+        ## homework:start
+        return
+        ## homework:end
 
     def __neg__(self):
-        ## homework:replace:on
-        #.return
-        return scale(self, -1)
-        ## homework:replace:off
+        ## homework:start
+        return
+        ## homework:end
 
     def __sub__(self, other):
-        ## homework:replace:on
-        #.return
-        return subtract(self, other)
-        ## homework:replace:off
+        ## homework:start
+        return
+        ## homework:end
 
     def __abs__(self):
-        ## homework:replace:on
-        #.return
-        return self.norm
-        ## homework:replace:off
+        ## homework:start
+        return
+        ## homework:end
 
     def __len__(self):
-        ## homework:replace:on
-        #.return
-        return self.dim
-        ## homework:replace:off
+        ## homework:start
+        return
+        ## homework:end
 
     def __eq__(self, other):
         return almost_equal(self, other)
@@ -144,10 +123,9 @@ def scale(v: Vector, k: t.Union[int, float]) -> Vector:
         msg = "Vectors can only be scaled by scalars! got {}"
         raise TypeError(msg.format(type(k)))
 
-    ## homework:replace:on
-    #.output_vector = 
-    output_vector = Vector([k * c for c in v])
-    ## homework:replace:off
+    ## homework:start
+    output_vector = 
+    ## homework:end
     return output_vector
 
 
@@ -161,19 +139,17 @@ def add(v1: Vector, v2: Vector) -> Vector:
         msg = "Vectors must have the same dimension, got {} and {}"
         raise ValueError(msg.format(v1.dim, v2.dim))
 
-    ## homework:replace:on
-    #.output_vector =
-    output_vector = Vector([c1 + c2 for c1, c2 in zip(v1, v2)])
-    ## homework:replace:off
+    ## homework:start
+    output_vector =
+    ## homework:end
     return output_vector
 
 
 def subtract(v1: Vector, v2: Vector) -> Vector:
     """Subtracts the second vector from the first vector. """
-    ## homework:replace:on
-    #.output_vector =
-    output_vector = add(v1, scale(v2, -1))
-    ## homework:replace:off
+    ## homework:start
+    output_vector =
+    ## homework:end
     return output_vector
 
 
@@ -187,21 +163,17 @@ def dot(v1: Vector, v2: Vector) -> t.Union[int, float]:
     if v1.dim != v2.dim:
         msg = "vectors must have the same dimension, got {} and {}"
         raise ValueError(msg.format(v1.dim, v2.dim))
-    ## homework:replace:on
-    #.output_value =
-    output_value = math.fsum(c1 * c2 for c1, c2 in zip(v1, v2))
-    ## homework:replace:off
+    ## homework:start
+    output_value =
+    ## homework:end
     return output_value
 
 
 def angle_between(v1: Vector, v2: Vector) -> t.Union[int, float]:
     """Computes the angle between two vectors. """
-    ## homework:replace:on
-    #.alpha =
-    frac = dot(v1, v2) / (v1.norm * v2.norm)
-    frac = max(min(frac, 1), -1)
-    alpha = math.acos(frac)
-    ## homework:replace:off
+    ## homework:start
+    alpha =
+    ## homework:end
     return alpha
 
 
@@ -216,22 +188,17 @@ def cross(v1: Vector, v2: Vector) -> Vector:
             msg = "Expected 3-dimentional vector, got a {}-dimentional"
             raise ValueError(msg.format(v.dim))
 
-    ## homework:replace:on
-    #.output_vector =
-    c1 = v1[1] * v2[2] - v1[2] * v2[1]
-    c2 = v1[0] * v2[2] - v1[2] * v2[0]
-    c3 = v1[0] * v2[1] - v1[1] * v2[0]
-    output_vector = Vector((c1, -c2, c3))
-    ## homework:replace:off
+    ## homework:start
+    output_vector =
+    ## homework:end
     return output_vector
 
 
 def build_unit_vector(v: Vector) -> Vector:
     """Builds a unit vector from the provided vector. """
-    ## homework:replace:on
-    #.unit_vector =
-    unit_vector = scale(v, (1 / v.norm))
-    ## homework:replace:off
+    ## homework:start
+    unit_vector =
+    ## homework:end
     return unit_vector
 
 
@@ -245,10 +212,9 @@ def project(v: Vector, d: Vector) -> Vector:
     Returns:
         Vector: the projection of v onto d.
     """
-    ## homework:replace:on
-    #.projection_vector = 
-    projection_vector = scale(d, dot(d, v) / dot(d, d))
-    ## homework:replace:off
+    ## homework:start
+    projection_vector = 
+    ## homework:end
     return projection_vector
 
 
