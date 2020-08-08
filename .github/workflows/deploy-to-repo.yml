@@ -32,5 +32,4 @@ jobs:
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.PUSH_TO_PUBLIC_REPOS }}
-        repository: https://github.com/open-workbooks/linear-algebra.git
-        
+        repository: open-workbooks/linear-algebra
