@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.PUSH_TO_PUBLIC_REPOS }}
     - name: build and push
       run: |
         ls -la

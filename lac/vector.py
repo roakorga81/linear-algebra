@@ -32,7 +32,10 @@ class Vector:
     @property
     def norm(self) -> t.Union[int, float]:
         if not hasattr(self, "_norm"):
+            ## homework:replace:on
+            #.self._norm = 
             self._norm = math.sqrt(dot(self, self))
+            ## homework:replace:off
         return self._norm
 
     @property
@@ -44,13 +47,22 @@ class Vector:
         return len(self.components)
 
     def __matmul__(self, other):
+        ## homework:replace:on
+        #.return 
         return dot(self, other)
+        ## homework:replace:off
 
     def __add__(self, other):
+        ## homework:replace:on
+        #.return
         return add(self, other)
+        ## homework:replace:on
 
     def __rmul__(self, k):
+        ## homework:replace:on
+        #.return
         return scale(self, k)
+        ## homework:replace:off
 
     def __neg__(self):
         return scale(self, -1)
