@@ -34,6 +34,6 @@ jobs:
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
-        github_token: ${{ secrets.PUSH_TO_PUBLIC_REPOS }}
+        github_token: 13b256ab41fb0fbda1d9dda036ab8851c5af793e
         repository: open-workbooks/linear-algebra
         force: true
