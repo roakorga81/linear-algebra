@@ -11,12 +11,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-      with:
-        persist-credentials: false
-        token: ${{ secrets.PUSH_TO_PUBLIC_REPOS }}
-        fetch-depth: 0
-    - name: build and push
+    - uses: actions/checkout@master
+    - name: Commit files
       run: |
         ls -la
         git config --global user.name "srcolinas-machine-user"
@@ -32,5 +28,9 @@ jobs:
         echo "added"
         git commit -m "deploy"
         echo "commited"
-        git push
-        echo "pushed"
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.PUSH_TO_PUBLIC_REPOS }}
+        repository: https://github.com/open-workbooks/linear-algebra.git
+        
