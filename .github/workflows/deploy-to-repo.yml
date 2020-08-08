@@ -28,7 +28,7 @@ jobs:
       with:
         python-version: "3.6"
     - name: install homework
-      run: pip install homework
+      run: python -m pip install homework
     - name: Build homework
       run: bash build.sh
     - name: Commit files
@@ -42,6 +42,5 @@ jobs:
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
-        github_token: 13b256ab41fb0fbda1d9dda036ab8851c5af793e
         repository: open-workbooks/linear-algebra
         force: true
