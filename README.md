@@ -29,7 +29,7 @@ Finally, we favor type hints and self descriptive names over docstrings, but we 
 
 ## Where to get the answers
 
-The workbook is splited into two repositories `open-workbooks/linear-algebra` and `open-workbooks/linear-algebra-answers`, which hold the task and the answers respectively. Since this worbook can be used as teaching material, the repo with the ansers is a private repository, but we can give you access to the private repository if you fill out our [collaborators form](https://forms.gle/atFNQEUxryN72L189).
+The workbook is splited into two repositories `open-workbooks/linear-algebra` and `open-workbooks/linear-algebra-answers`, which hold the task and the answers respectively. Since this worbook can be used as teaching material, the repo with the ansers is a private repository, but we can give you access to the private repository if you fill out our [collaborators form](https://forms.gle/atFNQEUxryN72L189). The repo with the answers has CI/CD implemented that so that all pushes to master update the repo without the answers, we can make sure that the task repo is always updated.
 
 ## Contribute
 
