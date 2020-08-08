@@ -22,7 +22,7 @@ jobs:
         repository: open-workbooks/linear-algebra
         path: linear-algebra
     - name: Build homework
-      run: ./build.sh
+      run: bash build.sh
     - name: Commit files
       run: |
         ls -la

@@ -1,5 +1,5 @@
 pip install homework
-homework make-many lac --replace=True
+homework make-many lac
 
 cp -R lac linear-algebra/lac
 cp -r tests linear-algebra/tests
@@ -8,4 +8,4 @@ cp README.md linear-algebra/README.md
 cp setup.cfg linear-algebra/setup.cfg
 cp setup.py linear-algebra/setup.py
 
-rm -rf .github/workflows
+rm -rf linear-algebra/.github/workflows

@@ -77,7 +77,7 @@ class Matrix:
         ## homework:replace:on
         #.replace
         return len(self._rowvectors)
-        ## homework:replace:pff
+        ## homework:replace:off
 
     @property
     def shape(self) -> t.Tuple[int, int]:
@@ -97,7 +97,7 @@ class Matrix:
         if not hasattr(self, "_norm"):
             ## homework:replace:on
             #.self._norm = 
-            raise NotImplementedError
+            self._norm = None
             ## homework:replace:off
         return self._T
 
@@ -131,7 +131,7 @@ class Matrix:
         if not hasattr(self, "_inverse"):
             ## homework:replace:on
             #.self._inverse = 
-            raise NotImplementedError
+            self._inverse = None
             ## homework:replace:off
         return self._inverse
 
