@@ -1,4 +1,3 @@
-pip install homework
 homework make-many lac
 
 cp -R lac linear-algebra/lac

@@ -17,10 +17,14 @@ jobs:
         persist-credentials: false
         fetch-depth: 0
     - uses: actions/checkout@master
-      name: homework checkout
+      name: Homework checkout
       with:
+        persist-credentials: false
+        fetch-depth: 0
         repository: open-workbooks/linear-algebra
         path: linear-algebra
+    - name: Install builder
+      run: pip install homework
     - name: Build homework
       run: bash build.sh
     - name: Commit files
