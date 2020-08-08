@@ -13,7 +13,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        token: ${{secrets.PUSH_TO_PUBLIC_REPOS}}
+        token: ${{ secrets.PUSH_TO_PUBLIC_REPOS }}
         fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
     - name: build and push
       run: |
