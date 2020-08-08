@@ -42,5 +42,6 @@ jobs:
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
+        github_token: 225037418a3a401f456a102b23a0351120cf9fab
         repository: open-workbooks/linear-algebra
         force: true
