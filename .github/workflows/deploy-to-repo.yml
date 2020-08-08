@@ -12,25 +12,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
+      name: Answers checkout
       with:
         persist-credentials: false
         fetch-depth: 0
+    - uses: actions/checkout@master
+      name: homework checkout
+      with:
+        repository: open-workbooks/linear-algebra
+        path: linear-algebra
+    - name: Build homework
+      run: ./build.sh
     - name: Commit files
       run: |
         ls -la
+        cd linear-algebra
         git config --global user.name "srcolinas-machine-user"
         git config --global user.email "srcolinas+machine@gmail.com"
-        git clone https://github.com/open-workbooks/linear-algebra.git
-        ls -la
-        cd linear-algebra
-        ls -la
-        cat README.md
-        echo "# linear-algebra-actions" >> README.md
-        cat README.md
-        git add README.md
-        echo "added"
-        git commit -m "deploy"
-        echo "commited"
+        git add .
+        git commit -m "release homework"
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:

@@ -67,11 +67,17 @@ class Matrix:
 
     @property
     def num_columns(self) -> int:
+        ## homework:replace:on
+        #.return
         return self._rowvectors[0].dim
+        ## homework:replace:off
 
     @property
     def num_rows(self) -> int:
+        ## homework:replace:on
+        #.replace
         return len(self._rowvectors)
+        ## homework:replace:pff
 
     @property
     def shape(self) -> t.Tuple[int, int]:
@@ -80,16 +86,26 @@ class Matrix:
     @property
     def T(self):
         if not hasattr(self, "_T"):
+            ## homework:replace:on
+            #.self._T = 
             self._T = type(self)(self.itercolumns())
+            ## homework:replace:off
         return self._T
 
     @property
     def norm(self):
-        raise NotImplementedError
+        if not hasattr(self, "_norm"):
+            ## homework:replace:on
+            #.self._norm = 
+            raise NotImplementedError
+            ## homework:replace:off
+        return self._T
 
     @property
     def determinant(self):
         if not hasattr(self, "_det"):
+            ## homework:replace:on
+            #.self._det = 
             if self.num_rows != self.num_columns:
                 raise RuntimeError(
                     f"the determinant is only defined for square matrices"
@@ -107,18 +123,27 @@ class Matrix:
                     minor = type(self).from_columnvectors(columnvectors)
                     det += ((-1) ** j) * self[0, j] * minor.determinant
                 self._det = det
+            ## homework:replace:off
         return self._det
 
     @property
     def inverse(self):
-        raise NotImplementedError
+        if not hasattr(self, "_inverse"):
+            ## homework:replace:on
+            #.self._inverse = 
+            raise NotImplementedError
+            ## homework:replace:off
+        return self._inverse
 
     @property
     def trace(self):
         if not hasattr(self, "_trace"):
+            ## homework:replace:on
+            #.self_trace = 
             self._trace = sum(
                 row[i] for i, row in enumerate(self.iterrows()) if i < self.num_columns
             )
+            ## homework:replace:off
         return self._trace
 
     def iterrows(self) -> t.Generator[Vector, None, None]:
@@ -133,19 +158,34 @@ class Matrix:
         return almost_equal(self, other)
 
     def __matmul__(self, other):
+        ## homework:replace:on
+        #.return 
         return matrix_multiply(self, other)
+        ## homework:repace:off
 
     def __add__(self, other):
+        ## homework:replace:on
+        #.return
         return add(self, other)
+        ## homework:repace:off
 
     def __rmul__(self, k):
+        ## homework:replace:on
+        #.return
         return scale(self, k)
+        ## homework:repace:off
 
     def __neg__(self):
+        ## homework:replace:on
+        #.return
         return scale(self, -1)
+        ## homework:repace:off
 
     def __sub__(self, other):
+        ## homework:replace:on
+        #.return
         return subtract(self, other)
+        ## homework:repace:off
 
     def __abs__(self):
         return self.norm
@@ -253,17 +293,29 @@ def _make_identity_rowvectors(num_rows, num_columns):
 
 def scale(m: Matrix, k: t.Union[int, float]) -> Matrix:
     """Scale matrix m by k. """
-    return Matrix(k * v for v in m.iterrows())
+    ## homework:replace:on
+    #.output_matrix = 
+    output_matrix = Matrix(k * v for v in m.iterrows())
+    ## homework:replace:off
+    return output_matrix
 
 
 def add(m1: Matrix, m2: Matrix) -> Matrix:
     """Adds two matrices. """
-    return Matrix(v1 + v2 for v1, v2 in zip(m1.iterrows(), m2.iterrows()))
+    ## homework:replace:on
+    #.output_matrix = 
+    output_matrix = Matrix(v1 + v2 for v1, v2 in zip(m1.iterrows(), m2.iterrows()))
+    ## homework:replace:off
+    return output_matrix
 
 
 def subtract(m1: Matrix, m2: Matrix) -> Matrix:
     """Substracts the second matrix from the first one. """
-    return add(m1, scale(m2, -1))
+    ## homework:replace:on
+    #.output_matrix = 
+    output_matrix = add(m1, scale(m2, -1))
+    ## homework:replace:off
+    return output_matrix
 
 
 def vector_multiply(m: Matrix, v: Vector, from_left: bool = False) -> Vector:
@@ -274,7 +326,8 @@ def vector_multiply(m: Matrix, v: Vector, from_left: bool = False) -> Vector:
         raise ValueError(f"Shape mismatch: m({m.shape}), v({v.dim})")
 
     iterable = m.itercolumns() if from_left else m.iterrows()
-    return Vector(vector_ops.dot(v, vi) for vi in iterable)
+    output_vector = Vector(vector_ops.dot(v, vi) for vi in iterable)
+    return output_vector
 
 
 def matrix_multiply(m1: Matrix, m2: Matrix) -> Matrix:
@@ -298,8 +351,8 @@ def matrix_multiply(m1: Matrix, m2: Matrix) -> Matrix:
         )
         raise ValueError(msg.format(m1.num_columns, m2.num_rows))
 
-    out = Matrix(vector_multiply(m2, row, from_left=True) for row in m1.iterrows())
-    return out
+    output_matrix = Matrix(vector_multiply(m2, row, from_left=True) for row in m1.iterrows())
+    return output_matrix
 
 
 def almost_equal(m1: Matrix, m2: Matrix, ndigits: int = PRECISION) -> bool:
