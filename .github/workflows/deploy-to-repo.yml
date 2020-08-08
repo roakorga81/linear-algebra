@@ -13,7 +13,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
+        persist-credentials: false
         token: ${{ secrets.PUSH_TO_PUBLIC_REPOS }}
+        fetch-depth: 0
     - name: build and push
       run: |
         ls -la
@@ -30,5 +32,5 @@ jobs:
         echo "added"
         git commit -m "deploy"
         echo "commited"
-        git push origin master
+        git push
         echo "pushed"
