@@ -27,5 +27,8 @@ jobs:
         echo "# linear-algebra-actions" >> README.md
         cat README.md
         git add README.md
+        echo "added"
         git commit -m "deploy"
+        echo "commited"
         git push
+        echo "pushed"
