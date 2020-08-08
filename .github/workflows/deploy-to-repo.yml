@@ -23,7 +23,11 @@ jobs:
         fetch-depth: 0
         repository: open-workbooks/linear-algebra
         path: linear-algebra
-    - name: Install builder
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: "3.6"
+    - name: install homework
       run: pip install homework
     - name: Build homework
       run: bash build.sh
