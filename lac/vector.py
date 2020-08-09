@@ -36,13 +36,15 @@ class Vector:
         return self._components
 
     @property
-    def dim(self) -> int:
+    def norm(self) -> float:
+        if not hasattr(self, "_norm"):
             ## homework:start
             self._norm =
             ## homework:end
         return self._norm
 
-    def __matmul__(self, other: Vector) -> float:
+    @property
+    def dim(self) -> int:
         ## homework:start
         return
         ## homework:end

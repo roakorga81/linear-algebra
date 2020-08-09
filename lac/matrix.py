@@ -94,14 +94,6 @@ class Matrix:
         return self._T
 
     @property
-    def norm(self) -> float:
-        if not hasattr(self, "_norm"):
-            ## homework:start
-            self._norm = 
-            ## homework:end
-        return self._T
-
-    @property
     def determinant(self) -> float:
         if not hasattr(self, "_det"):
             ## homework:start
@@ -160,9 +152,6 @@ class Matrix:
         ## homework:start
         return
         ## homework:end
-
-    def __abs__(self) -> float:
-        return self.norm
 
     def __iter__(self):
         return self.iterrows()
@@ -296,8 +285,9 @@ def vector_multiply(m: Matrix, v: Vector, from_left: bool = False) -> Vector:
     if cond1 or cond2:
         raise ValueError(f"Shape mismatch: m({m.shape}), v({v.dim})")
 
-    iterable = m.itercolumns() if from_left else m.iterrows()
-    output_vector = Vector(vector_ops.dot(v, vi) for vi in iterable)
+    ## homework:start
+    output_vector = 
+    ## homework:end
     return output_vector
 
 
@@ -321,8 +311,9 @@ def matrix_multiply(m1: Matrix, m2: Matrix) -> Matrix:
             "instead"
         )
         raise ValueError(msg.format(m1.num_columns, m2.num_rows))
-
-    output_matrix = Matrix(vector_multiply(m2, row, from_left=True) for row in m1.iterrows())
+    ## homework:start
+    output_matrix = 
+    ## homework:end
     return output_matrix
 
 
