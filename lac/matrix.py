@@ -55,8 +55,10 @@ class Matrix:
         )
         return cls(rowvectors)
 
-    def __init__(self, rowvectors: t.Iterable[Vector]):
-        self._rowvectors = list(rowvectors)
+    def __init__(self, rowvectors: t.Iterable[t.Union[Vector, t.Iterable[t.Union[int, float]]]]):
+        self._rowvectors = [
+            Vector(row) if not isinstance(row, Vector) else row for row in rowvectors
+        ]
         _validate_vector_dimensions(self._rowvectors)
 
     @property
