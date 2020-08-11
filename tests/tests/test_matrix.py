@@ -207,7 +207,7 @@ class TestMatrix(unittest.TestCase):
 
     def test_transpose_multiplication(self):
         for m1, m2 in itertools.product(utils.ALL_MATRICES, utils.ALL_MATRICES):
-            if mat1.num_columns == mat2.num_rows:
+            if m1.num_columns == m2.num_rows:
                 utils.assert_matrices_almost_equal((m1 @ m2).T, m2.T @ m1.T)
 
     def test_transpose_cyclic(self):
