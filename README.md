@@ -12,7 +12,7 @@ What you should do is that you should implement the library. The library consist
 git clone https://github.com/open-workbooks/linear-algebra.git
 cd linear-algebra
 pip install -e ".[dev]"
-```bash
+```
 
 Now you can run the tests and start implementing your own linear algebra library!
 
