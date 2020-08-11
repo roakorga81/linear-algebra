@@ -43,7 +43,7 @@ REDUCED_MATRICES = [
     ),
 ]
 
-ALL_MATRICES = [MAT1]
+ALL_MATRICES = [MAT1] + [orig for orig, _ in REDUCED_MATRICES]
 
 
 def assert_vectors_almost_equal(v1, v2):

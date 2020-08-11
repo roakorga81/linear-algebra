@@ -207,7 +207,8 @@ class TestMatrix(unittest.TestCase):
 
     def test_transpose_multiplication(self):
         for m1, m2 in itertools.product(utils.ALL_MATRICES, utils.ALL_MATRICES):
-            utils.assert_matrices_almost_equal((m1 @ m2).T, m2.T @ m1.T)
+            if mat1.num_columns == mat2.num_rows:
+                utils.assert_matrices_almost_equal((m1 @ m2).T, m2.T @ m1.T)
 
     def test_transpose_cyclic(self):
         pass
@@ -274,9 +275,10 @@ class TestMatrix(unittest.TestCase):
 
     def test_subtraction(self):
         for mat1, mat2 in itertools.product(utils.ALL_MATRICES, utils.ALL_MATRICES):
-            utils.assert_matrices_almost_equal(
-                mat1 - mat2, matrix_ops.subtract(mat1, mat2)
-            )
+            if mat1.shape == mat2.shape:
+                utils.assert_matrices_almost_equal(
+                    mat1 - mat2, matrix_ops.subtract(mat1, mat2)
+                )
 
 
 class TestMatrixOps(unittest.TestCase):
