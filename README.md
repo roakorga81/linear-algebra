@@ -8,14 +8,28 @@ This repository can also be seen as a Python workbook, since you would get famil
 
 What you should do is that you should implement the library. The library consist of the class vector and matrix, and common operations. You will notice that you are given the test cases for each of the implementaions required. Please report an issue if you find that a test case is wrong. To start, please do:
 
-```
+```bash
 git clone https://github.com/open-workbooks/linear-algebra.git
 cd linear-algebra
 pip install -e ".[dev]"
-```
+```bash
 
 Now you can run the tests and start implementing your own linear algebra library!
 
+Here is the current coverage report:
+
+```bash
+---------- coverage: platform darwin, python 3.7.7-final-0 -----------
+Name                   Stmts   Miss  Cover   Missing
+----------------------------------------------------
+lac/__init__.py            3      0   100%
+lac/matrix.py            195     35    82%   36-38, 44-46, 52-56, 66, 70, 105, 126-131, 135-142, 189, 204, 212, 218-222, 249-251, 263-265, 271, 362-363, 369, 373, 377, 381
+lac/testing_utils.py      16      0   100%
+lac/vector.py            115     14    88%   87, 108, 128, 146-147, 163-164, 190-191, 218-219, 252-254, 264
+----------------------------------------------------
+TOTAL                    329     49    85%
+
+```
 
 ### Library desing
 
