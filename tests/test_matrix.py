@@ -234,13 +234,31 @@ class TestMatrix(unittest.TestCase):
     def test_norm_zero(self):
         pass
 
-    def test_determinant(self):
+    def test_determinant_execution(self):
         for mat in utils.ALL_MATRICES:
             if mat.num_rows == mat.num_columns:
                 _ = mat.determinant
             else:
                 with self.assertRaises(RuntimeError):
                     _ = mat.determinant
+    
+    def test_determinant_product(self):
+        for mat1, mat2 in itertools.product(utils.ALL_MATRICES, utils.ALL_MATRICES):
+            if mat1.shape == mat2.shape and mat1.num_rows == mat1.num_columns:
+                prod = mat1 @ mat2
+                self.assertAlmostEqual(prod.determinant, mat1.determinant * mat2.determinant, PRECISION)
+                self.assertAlmostEqual(prod.determinant, (mat2 @ mat1).determinant)
+
+    def test_determinant_transpose(self):
+        for mat in utils.ALL_MATRICES:
+            if mat.num_rows == mat.num_columns:
+                self.assertAlmostEqual(mat.T.determinant, mat.determinant)
+
+    def test_determinant_scalar_multiply(self):
+        for k, mat in itertools.product(utils.ALL_SCALARS, utils.ALL_MATRICES):
+            if mat.num_rows == mat.num_columns:
+                self.assertAlmostEqual((k * mat).determinant, k**mat.num_rows * mat.determinant)
+
 
     def test_inverse(self):
         pass
