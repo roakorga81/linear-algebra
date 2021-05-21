@@ -109,4 +109,3 @@ You could see this workbook is not intended to be a standalone linear algebra re
 - [MIT 18.06SC Linear Algebra, Fall 2011](https://www.youtube.com/playlist?list=PL221E2BBF13BECF6C)
 - [No Bullshit Guide to Linear Algebra by Ivan Savov](https://www.goodreads.com/book/show/34760208-no-bullshit-guide-to-linear-algebra)
 - [Essence of linear algebra by 3Bue1Brown](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab)
-
