@@ -113,7 +113,7 @@ class Matrix:
     def trace(self) -> float:
         if not hasattr(self, "_trace"):
             ## homework:start
-            self._trace = 
+            self_trace = 
             ## homework:end
         return self._trace
 
