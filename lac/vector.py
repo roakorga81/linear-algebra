@@ -39,39 +39,45 @@ class Vector:
     def norm(self) -> float:
         if not hasattr(self, "_norm"):
             ## homework:start
-            self._norm =
+            self._norm = norm(self)
             ## homework:end
         return self._norm
 
     @property
     def dim(self) -> int:
         ## homework:start
-        return
+        return len(self)
         ## homework:end
 
     def __add__(self, other: Vector) -> Vector:
         ## homework:start
-        return
+        return add(self, other)
         ## homework:end
+
+    def __rmul__(self, k: t.Union[int,float]) -> Vector:
+        return scale(self,k)
+
+    def __matmul__(self, other: Vector) -> float:
+        return dot(self,other)
 
     def __neg__(self) -> Vector:
         ## homework:start
-        return
+        return negativeVector(self)
         ## homework:end
 
     def __sub__(self, other: Vector) -> Vector:
         ## homework:start
-        return
+        return subtract(self,other)
         ## homework:end
 
-    def __abs__(self):
+    def __abs__(self) -> Vector: # tengo duda
         ## homework:start
-        return
+        return abs(self)
         ## homework:end
 
     def __len__(self):
         ## homework:start
-        return
+        return getLen(self)
         ## homework:end
 
     def __eq__(self, other):
@@ -128,10 +134,15 @@ def scale(v: Vector, k: t.Union[int, float]) -> Vector:
         raise TypeError(msg.format(type(k)))
 
     ## homework:start
-    output_vector = 
+    # Probar en otro codigo este algoritmo!!
+    output_vector = Vector(elemento * k for elemento in v)
+    
     ## homework:end
     return output_vector
 
+def norm(v: Vector)->float:
+    output_value = math.sqrt(sum(elemento**2 for elemento in v))
+    return output_value
 
 def add(v1: Vector, v2: Vector) -> Vector:
     """Adds two vectors of the same dimension.
@@ -144,7 +155,8 @@ def add(v1: Vector, v2: Vector) -> Vector:
         raise ValueError(msg.format(v1.dim, v2.dim))
 
     ## homework:start
-    output_vector =
+    output_vector = Vector(a+b for a,b in zip(v1,v2))
+    #zip permite coger dos iterables y recorrer los dos al mismo tiempo
     ## homework:end
     return output_vector
 
@@ -152,7 +164,7 @@ def add(v1: Vector, v2: Vector) -> Vector:
 def subtract(v1: Vector, v2: Vector) -> Vector:
     """Subtracts the second vector from the first vector. """
     ## homework:start
-    output_vector =
+    output_vector = Vector(a-b for a,b in zip(v1,v2))
     ## homework:end
     return output_vector
 
@@ -168,7 +180,12 @@ def dot(v1: Vector, v2: Vector) -> float:
         msg = "vectors must have the same dimension, got {} and {}"
         raise ValueError(msg.format(v1.dim, v2.dim))
     ## homework:start
-    output_value =
+    output_value = 0
+    sum = 0
+    for a,b in zip(v1,v2):
+        c = a * b
+        sum = sum + c
+    output_value = sum
     ## homework:end
     return output_value
 
@@ -176,7 +193,21 @@ def dot(v1: Vector, v2: Vector) -> float:
 def angle_between(v1: Vector, v2: Vector) -> float:
     """Computes the angle between two vectors. """
     ## homework:start
-    alpha =
+    prodPunto = dot(v1,v2)
+
+    mtd1 = 0
+    mtd2 = 0
+    for element1,element2 in zip(v1,v2):
+      mtd1 = mtd1 + element1 ** 2
+      mtd2 = mtd2 + element2 ** 2
+
+    coseno = prodPunto / ((mtd1 ** 0.5 ) * (mtd2 ** 0.5 ) )
+    if coseno > 1:
+        alpha = 0.0
+    else:
+        alpha = math.acos(coseno)
+    #alpha = math.degrees(math.acos(coseno))
+    
     ## homework:end
     return alpha
 
@@ -193,17 +224,41 @@ def cross(v1: Vector, v2: Vector) -> Vector:
             raise ValueError(msg.format(v.dim))
 
     ## homework:start
-    output_vector =
+    output_vector = []
+    output_vector.append(v1[1] * v2[2] - v1[2] * v2[1])
+    output_vector.append(v1[2] * v2[0] - v1[0] * v2[2])
+    output_vector.append(v1[0] * v2[1] - v1[1] * v2[0])
+    output_vector = Vector(output_vector)
+    
     ## homework:end
     return output_vector
 
+def getLen(v: Vector)-> int:
+    result = 0
+    for i in v:
+        result+=1
+    return result
+
+def negativeVector(v: Vector) -> Vector:
+    """Negative vector."""
+    ## homework:start
+    output_vector = Vector(elemento*-1 for elemento in v)
+    ## homework:end
+    return output_vector
 
 def build_unit_vector(v: Vector) -> Vector:
     """Builds a unit vector from the provided vector. """
     ## homework:start
-    unit_vector =
+    unit_vector = []
+    modulo = 0
+    for elemento in v:
+        modulo = modulo + elemento ** 2
+  #return unit_vector
+    modulo = modulo ** 0.5
+    for elemento in v:
+        unit_vector.append(elemento/modulo)
     ## homework:end
-    return unit_vector
+    return Vector(unit_vector)
 
 
 def project(v: Vector, d: Vector) -> Vector:
@@ -217,7 +272,21 @@ def project(v: Vector, d: Vector) -> Vector:
         Vector: the projection of v onto d.
     """
     ## homework:start
-    projection_vector = 
+    projection_vector=[]
+    sum = 0
+    mtd = 0
+    for a,b in zip(v,d):
+        c = a * b
+        sum = sum + c
+    dot = sum
+    
+    for elemento in d:
+        mtd = mtd + elemento ** 2
+    
+    commonFactor = dot/mtd
+
+    for elemento in d:
+        projection_vector.append(commonFactor * elemento)
     ## homework:end
     return projection_vector
 

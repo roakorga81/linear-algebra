@@ -4,6 +4,8 @@ import copy
 import typing as t
 from array import array
 from collections.abc import Iterable
+from unittest import result
+from xmlrpc.client import Marshaller
 
 import lac.vector as vector_ops
 from lac import Vector, PRECISION
@@ -72,13 +74,13 @@ class Matrix:
     @property
     def num_columns(self) -> int:
         ## homework:start
-        return
+        return _columns(self)
         ## homework:end
 
     @property
     def num_rows(self) -> int:
         ## homework:start
-        return
+        return _rows(self)
         ## homework:end
 
     @property
@@ -89,7 +91,7 @@ class Matrix:
     def T(self) -> Matrix:
         if not hasattr(self, "_T"):
             ## homework:start
-            self._T = 
+            self._T = _trans(self)
             ## homework:end
         return self._T
 
@@ -97,7 +99,7 @@ class Matrix:
     def determinant(self) -> float:
         if not hasattr(self, "_det"):
             ## homework:start
-            self._det = 
+            self._det = _determinant(self)
             ## homework:end
         return self._det
 
@@ -105,7 +107,7 @@ class Matrix:
     def inverse(self) -> Matrix:
         if not hasattr(self, "_inverse"):
             ## homework:start
-            self._inverse = 
+            self._inverse = self
             ## homework:end
         return self._inverse
 
@@ -113,7 +115,7 @@ class Matrix:
     def trace(self) -> float:
         if not hasattr(self, "_trace"):
             ## homework:start
-            self_trace = 
+            self._trace = _trace(self)
             ## homework:end
         return self._trace
 
@@ -130,27 +132,27 @@ class Matrix:
 
     def __matmul__(self, other: Matrix) -> Matrix:
         ## homework:start
-        return 
+        return matrix_multiply(self,other)
         ## homework:end
 
     def __add__(self, other: Matrix) -> Matrix:
         ## homework:start
-        return
+        return add(self,other)
         ## homework:end
 
     def __rmul__(self, k: t.Union[int, float]) -> Matrix:
         ## homework:start
-        return
+        return scale(self,k)
         ## homework:end
 
     def __neg__(self) -> Matrix:
         ## homework:start
-        return
+        return negation(self)
         ## homework:end
 
     def __sub__(self, other: Matrix) -> Matrix:
         ## homework:start
-        return
+        return subtract(self,other)
         ## homework:end
 
     def __iter__(self):
@@ -233,8 +235,73 @@ class Matrix:
     def __repr__(self):
         index = len("Vector(")
         vals = "\n  ".join(repr(v)[index:-1] for v in self.iterrows())
-        return f"Matrix(\n  {vals[:-1]}],\n shape={self.shape}\n)"
+        return f"Matrix(\n  {vals[:-1]}],\n shape={self.shape}\n)"          
 
+def _determinant(m: Matrix) -> float :
+    """Computes the determinant  of a Matrix.
+
+    Raises:
+        ValueError: if Matrix A columns {} is not equal with Matrix B rows {}
+
+    """
+    if m.num_columns != m.num_rows:
+        msg = "for determinant must have the same dimension columns {}and  rows {}"
+        raise ValueError(msg.format(m.num_columns,m.num_rows))
+
+    if m.num_rows == 1:
+        result_det = m[0]
+        return result_det
+    elif m.num_rows == 2:
+        result_det = m[0][0]*m[1][1] - m[1][0]*m[0][1]
+        return result_det
+    else:
+        result_det = 0
+        for i in range(len(m[0])):
+            result_det += ((-1)**i)*m[0][i]*_determinant(_other_matrix(m,i))    
+        return result_det     
+    
+
+def _other_matrix(a,i): # Funcion para encontrar la matriz peque... 
+    a = list((list(vec) for vec in a))
+    arr = copy.deepcopy(a)
+    arr = a[:]
+    if len(arr) == 2:
+        return Matrix(arr)
+    else:
+        arr.pop(0)
+        for j in arr:
+            j.pop(i)
+            
+        return Matrix(arr)
+
+def _trans(m: Matrix) -> Matrix :
+    rows = len(m)
+    cols = len(m[0])
+    result_trans = [[m[j][i] for j in range(rows)] for i in range(cols)]
+    
+    return Matrix(result_trans)
+
+
+def _trace(m: Matrix) -> float:
+    result_trace = sum(row[index] for index,row in enumerate(m))
+    return result_trace
+
+def _columns(m: Matrix) -> int :
+    columns = len(m[0])
+    for row in m:
+        if(columns != len(row)):
+            raise ValueError(
+                "rows should have same dimensions"
+            )
+        else:
+            columns = len(row)
+    return columns
+
+def _rows(m: Matrix) -> int :
+    rows = 0
+    for _ in m:
+        rows +=1
+    return rows
 
 def _validate_vector_dimensions(vectors: t.Sequence[Vector]) -> None:
     ref = vectors[0].dim
@@ -254,29 +321,43 @@ def _make_identity_rowvectors(num_rows, num_columns):
     return rowvectors
 
 
+
 def scale(m: Matrix, k: t.Union[int, float]) -> Matrix:
     """Scale matrix m by k. """
-    ## homework:start
-    output_matrix = 
+    ## homework:start  
+    output_matrix = [[elemento * k for elemento in row] for row in m]
     ## homework:end
+    return Matrix(output_matrix)
+
+
+def negation(m1: Matrix) -> Matrix:
+    """Negation Matrix. """
+    output_matrix = Matrix([ item * -1 for item in row ]for row in m1)
     return output_matrix
-
-
-def add(m1: Matrix, m2: Matrix) -> Matrix:
-    """Adds two matrices. """
-    ## homework:start
-    output_matrix = 
-    ## homework:end
-    return output_matrix
-
 
 def subtract(m1: Matrix, m2: Matrix) -> Matrix:
     """Substracts the second matrix from the first one. """
     ## homework:start
-    output_matrix = 
+    output_matrix = []
+    for row_m1,row_m2 in zip(m1,m2):
+        row = []
+        for col_m1,col_m2 in zip(row_m1,row_m2):
+            row.append(col_m1-col_m2)
+        output_matrix.append(Vector(row))
     ## homework:end
-    return output_matrix
+    return Matrix(output_matrix)
 
+def add(m1: Matrix, m2: Matrix) -> Matrix:
+    """Adds two matrices. """
+    ## homework:start
+    output_matrix = []
+    for row_m1,row_m2 in zip(m1,m2):
+        vec_by_row = []
+        for col_m1,col_m2 in zip(row_m1,row_m2):
+            vec_by_row.append(col_m1 + col_m2)
+        output_matrix.append(Vector(vec_by_row))
+    ## homework:end
+    return Matrix(output_matrix)
 
 def vector_multiply(m: Matrix, v: Vector, from_left: bool = False) -> Vector:
     """Multiplies a matrix with a vector from the right or the left. """
@@ -286,9 +367,12 @@ def vector_multiply(m: Matrix, v: Vector, from_left: bool = False) -> Vector:
         raise ValueError(f"Shape mismatch: m({m.shape}), v({v.dim})")
 
     ## homework:start
-    output_vector = 
+    output_vector = []
+    for row_m in m:
+        elemento = sum((item_row + item_vec for item_row, item_vec in zip(row_m, v)))
+        output_vector.append(elemento)
     ## homework:end
-    return output_vector
+    return Vector(output_vector)
 
 
 def matrix_multiply(m1: Matrix, m2: Matrix) -> Matrix:
@@ -312,9 +396,9 @@ def matrix_multiply(m1: Matrix, m2: Matrix) -> Matrix:
         )
         raise ValueError(msg.format(m1.num_columns, m2.num_rows))
     ## homework:start
-    output_matrix = 
+    output_matrix = [[sum(elem_1 * elem_2 for elem_1, elem_2 in zip(row_m1,row_m2)) for row_m2 in zip(*m2)] for row_m1 in m1]
     ## homework:end
-    return output_matrix
+    return Matrix(output_matrix)
 
 
 def almost_equal(m1: Matrix, m2: Matrix, ndigits: int = PRECISION) -> bool:
