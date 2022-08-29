@@ -1,8 +1,0 @@
-
-[dev]
-pytest
-pytest-xdist
-pytest-cov
-black
-mypy
-pydocstyle
